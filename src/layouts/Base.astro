@@ -30,6 +30,17 @@ const {
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <script is:inline>
+      // Intro plays once per session (spec §4.1). Decided before first paint so nothing flashes.
+      (function () {
+        var seen = false;
+        try { seen = sessionStorage.getItem('md-intro') === '1'; } catch (e) {}
+        if (seen) return;
+        var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.documentElement.classList.add(rm ? 'intro-rm' : 'intro');
+        try { sessionStorage.setItem('md-intro', '1'); } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <slot />

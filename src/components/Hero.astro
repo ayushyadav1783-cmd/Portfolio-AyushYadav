@@ -40,10 +40,10 @@ const stars = Array.from({ length: 130 }, () => ({
   <div class="hero__stands" aria-hidden="true" data-stands></div>
   <div class="hero__tunnel" aria-hidden="true"></div>
 
-  <div class="hero__words wrap">
+  <div class="hero__words wrap" data-hero-words>
     <p class="hero__eyebrow m" data-walk-fade>{h.eyebrow}</p>
     <h1 id="hero-name" class="hero__name d" data-walk-name>
-      {h.first}<br /><span class="outline-text">{h.last}</span><span class="red">.</span>
+      <span class="hero__first" data-intro-first>{h.first}</span><br /><span class="outline-text hero__last" data-intro-last>{h.last}</span><span class="red hero__stop" data-intro-stop>.</span>
     </h1>
     <p class="hero__tagline" data-walk-fade>{h.taglineA} <span class="gold">{h.taglineB}</span></p>
     <p class="hero__sub m" data-walk-fade>{h.sub}</p>
@@ -140,6 +140,7 @@ const stars = Array.from({ length: 130 }, () => ({
     background: var(--trophy); color: var(--on-trophy); transform: rotate(-1.2deg);
   }
   .hero__name { transform-origin: 0% 100%; }
+  .hero__first, .hero__last, .hero__stop { display: inline-block; }
 
   .ticker .marquee { gap: 28px; padding: 10px 0; font-weight: 800; font-size: 26px; letter-spacing: .02em; }
 </style>

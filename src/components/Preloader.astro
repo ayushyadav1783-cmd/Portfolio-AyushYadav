@@ -1,0 +1,62 @@
+---
+// Tunnel walkout preloader (spec §4.1, board 03). Only shown when <html> has .intro,
+// which the inline head script sets on the first visit of a session (and never for reduced motion).
+---
+
+<div class="pre" aria-hidden="true" data-pre>
+  <div class="pre__tunnel" data-pre-tunnel>
+    <span class="pre__wall pre__wall--l"></span>
+    <span class="pre__wall pre__wall--r"></span>
+    <span class="pre__ceil"></span>
+    <span class="pre__floor"></span>
+    <span class="pre__light" data-pre-light></span>
+  </div>
+  <span class="pre__flash" data-pre-flash></span>
+  <p class="pre__count m">SQUAD LOADING <span class="gold" data-pre-count>00/07</span></p>
+</div>
+<button type="button" class="pre__skip m" data-pre-skip>Skip intro →</button>
+
+<style>
+  .pre, .pre__skip { display: none; }
+  :global(html.intro) .pre { display: block; }
+  :global(html.intro) .pre__skip { display: inline-flex; }
+
+  .pre {
+    position: fixed; inset: 0; z-index: 100; background: #030304; overflow: hidden;
+    /* Failsafe: if the intro script never runs, get out of the way. */
+    animation: pre-failsafe 0s linear 6s forwards;
+  }
+  @keyframes pre-failsafe { to { visibility: hidden; } }
+  .pre__tunnel { position: absolute; inset: 0; transform-origin: 50% 46%; }
+  .pre__wall { position: absolute; top: 0; bottom: 0; width: 18%; background: #0d0d12; }
+  .pre__wall--l { left: 0; }
+  .pre__wall--r { right: 0; }
+  .pre__ceil {
+    position: absolute; left: 18%; right: 18%; top: 0; height: 22%; background: #0b0b0f;
+    clip-path: polygon(0 0, 100% 0, 70% 100%, 30% 100%);
+  }
+  .pre__floor {
+    position: absolute; left: 18%; right: 18%; bottom: 0; height: 30%; background: #101016;
+    clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  }
+  .pre__light {
+    position: absolute; left: calc(50% - 60px); top: calc(46% - 45px); width: 120px; height: 90px; transform: scale(0); transform-origin: 50% 100%;
+    border-radius: 60px 60px 0 0;
+    background: radial-gradient(ellipse at 50% 100%, #fffbe8, rgba(245, 197, 66, .4) 40%, rgba(3, 3, 4, 0) 75%);
+  }
+  .pre__flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+  .pre__count {
+    position: absolute; left: 24px; bottom: 18px; margin: 0;
+    font-size: 12px; letter-spacing: .14em; color: var(--muted);
+  }
+  .pre__skip {
+    position: fixed; right: 16px; bottom: 10px; z-index: 101; align-items: center; min-height: 44px; padding: 0 8px;
+    border: 0; background: transparent; color: var(--muted); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    cursor: pointer; opacity: 0; animation: pre-failsafe 0s linear 6s forwards;
+  }
+  .pre__skip:hover, .pre__skip:focus-visible { color: var(--floodlight); }
+
+  /* Reduced motion, first visit: a 300ms fade-in of the final hero instead of the tunnel. */
+  :global(html.intro-rm) :global(.hero__words) { animation: pre-fade .3s ease-out both !important; }
+  @keyframes pre-fade { from { opacity: 0; } to { opacity: 1; } }
+</style>
