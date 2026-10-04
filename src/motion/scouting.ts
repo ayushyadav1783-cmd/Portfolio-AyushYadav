@@ -1,26 +1,22 @@
 // Scouting Report (spec §8.1): resume links open an in-page VAR-check sequence instead of the raw PDF.
 import { gsap } from 'gsap';
-import { isTouch, reducedMotion } from './env';
+import { reducedMotion } from './env';
 import { startScroll, stopScroll } from './scroll';
 
 export function initScouting() {
   const dialog = document.querySelector<HTMLDialogElement>('[data-scout]');
   const sheet = document.querySelector<HTMLElement>('[data-scout-sheet]');
   const stripe = document.querySelector<HTMLElement>('[data-var-stripe]');
-  const frame = document.querySelector<HTMLIFrameElement>('[data-scout-frame]');
   const scan = document.querySelector<HTMLElement>('[data-scout-scan]');
   const stamp = document.querySelector<HTMLElement>('[data-scout-stamp]');
-  if (!dialog || !sheet || !stripe || !frame || !scan || !stamp) return;
+  if (!dialog || !sheet || !stripe || !scan || !stamp) return;
 
-  if (isTouch) dialog.classList.add('is-touch');
   let opener: HTMLElement | null = null;
   let closing = false;
 
   function open(trigger: HTMLElement) {
     if (dialog!.open) return;
     opener = trigger;
-    // Load the PDF only when someone asks for it.
-    if (!isTouch && !frame!.src) frame!.src = '/resume.pdf#view=FitH&toolbar=0&navpanes=0';
     stopScroll();
     if (location.hash !== '#resume') history.pushState({ scout: true }, '', '#resume');
 

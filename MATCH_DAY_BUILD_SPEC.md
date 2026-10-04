@@ -385,7 +385,7 @@ Every "Resume" link (hero CTA, Full Time row) opens an in-page **Scouting Report
 
 - Dialog: native `<dialog>`, focus contained, Esc closes, URL `#resume`.
 - Kicker: `VAR CHECK · SCOUTING REPORT` · Title: **Scouting report** · Sub: `Ayush Yadav · No. 7`
-- Desktop (fine pointer): the PDF itself in a framed sheet (loaded only on first open). Mobile/touch: a summary card built from `content.json → person` (headline, education, experience) instead of an embedded PDF, since mobile browsers don't render inline PDFs well.
+- All viewports: a summary card built from `content.json → person` (headline, education, experience). The PDF is never embedded, because it contains the phone number, which the site never displays. It's one click away via the buttons.
 - Buttons: `Download PDF` (download attribute) · `Open in new tab` · `Back to the match`
 - Stamp: `CLEARED ✓`
 

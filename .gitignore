@@ -19,3 +19,7 @@ npm-debug.log*
 
 # generated from assets/ by scripts/sync-assets.mjs
 public/resume.pdf
+resume/*.aux
+resume/*.log
+resume/*.out
+resume/*.pdf

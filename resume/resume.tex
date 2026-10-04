@@ -1,0 +1,145 @@
+%-------------------------------------------------------------------------------
+% Ayush Ramashankar Yadav — CV/ML/Robotics Internship Resume (FINAL)
+% v2 research results, engagement-scoped, zero repetition
+% Compiles on Overleaf (pdfLaTeX)
+%-------------------------------------------------------------------------------
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage[margin=0.45in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+\pagestyle{empty}
+
+\titleformat{\section}{\vspace{-7pt}\scshape\large\bfseries}{}{0em}{}[\color{black}\titlerule\vspace{-4pt}]
+
+\newcommand{\resumeItem}[1]{\item\small{#1}}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{1pt}\item
+    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \textbf{\small #2} \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+  \vspace{1pt}\item
+    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \small\textbf{#1} & \textbf{\small #2} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+\newcommand{\resumeThemeHeading}[1]{
+  \vspace{1pt}\item
+    \small\textbf{#1}\vspace{-3pt}
+}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in, itemsep=0pt, topsep=1pt]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+\begin{document}
+
+%----------HEADER----------
+\begin{center}
+    {\Huge \scshape Ayush Ramashankar Yadav} \\ \vspace{3pt}
+    \small
+    Harrison, NJ $|$
+    \href{mailto:ayushyadav1783@gmail.com}{ayushyadav1783@gmail.com} $|$
+    \href{https://github.com/ayushyadav1783-cmd}{github.com/ayushyadav1783-cmd} $|$
+    \href{https://www.linkedin.com/in/ayush-yadav-87ab581a5}{linkedin.com/in/ayush-yadav-87ab581a5} \\ \vspace{3pt}
+    \small\textit{\textbf{Computer Vision \& Robotics Researcher} --- built a 29.6 dB language-grounded 3D Gaussian Splatting pipeline for real-robot manipulation at NJIT's Aegean AI Lab.}
+\end{center}
+\vspace{-8pt}
+
+%----------EDUCATION----------
+\section{Education}
+\resumeSubHeadingListStart
+\resumeSubheading
+{New Jersey Institute of Technology (NJIT)}{Newark, NJ}
+{M.S. in Artificial Intelligence $|$ GPA: 3.83/4.00 $|$ Computer Vision, Deep Learning, AI for Robotics, ML}{2025 -- 2027 (Expected)}
+\resumeSubheading
+{Ramrao Adik Institute of Technology (D.Y. Patil University)}{India}
+{B.Tech. in Computer Engineering $|$ CGPA: 8.66/10.00}{2021 -- 2025}
+\resumeSubHeadingListEnd
+\vspace{-6pt}
+
+%----------RESEARCH----------
+\section{Research Experience}
+\resumeSubHeadingListStart
+
+\resumeSubheading
+{Aegean AI Lab, NJIT}{Newark, NJ}
+{AI Research Assistant --- Summer of Agents 2026 (competitive program, 3 positions)}{Jun 2026 -- Present}
+
+\resumeThemeHeading{Language-Grounded 3D Gaussian Splatting for Robotic Manipulation (AR4 arm, Real2Sim2Real):}
+\resumeItemListStart
+  \resumeItem{Building an end-to-end pipeline from natural-language query to robot action: text $\rightarrow$ CLIP-embedded 3DGS scene $\rightarrow$ 3D object localization $\rightarrow$ XYZ manipulation targets for a SmolVLA motion planner on a physical AR4 arm}
+  \resumeItem{Achieved 29.60 dB PSNR / 0.952 SSIM / 0.078 LPIPS lab-scene reconstruction (621/621 gimbal-captured frames registered at 0.96px), a +2.1 dB improvement over baseline, trained with gsplat MCMC on an NVIDIA RTX PRO 6000 Blackwell (96GB)}
+  \resumeItem{Produced two documented ablation findings: per-folder COLMAP camera mode for mixed video/still captures (14 dB $\rightarrow$ 29 dB on identical images) and Gaussian budget vs. training length (1M @ 30K steps outperforms 3M @ 100K)}
+  \resumeItem{Diagnosed a catastrophically broken scene scale ($\sim$5M units) traced to sequential matching on unordered captures; root-caused it and resolved it via exhaustive feature matching}
+\resumeItemListEnd
+
+\resumeThemeHeading{Sim-to-Real Geometric Alignment (code-reviewed and merged to aegean-ai/ar4-physical-ai):}
+\resumeItemListStart
+  \resumeItem{Built and validated a Umeyama similarity-transform engine (sub-mm synthetic accuracy) and a scale-aware robust ICP engine with FPFH+RANSAC global initialization (0.46mm on synthetic ground truth) for 3DGS-to-robot-frame registration}
+  \resumeItem{Found that unconstrained 7-DOF ICP silently converges to a 28\textdegree\ mis-tilt (5.8mm RMSE) on quasi-symmetric geometry; designed a gravity-constrained pipeline (table-plane leveling, closed-form yaw/scale/translation, 12-seed yaw sweep) proving low RMSE alone cannot validate registration}
+\resumeItemListEnd
+
+\resumeThemeHeading{Open-Vocabulary Semantic 3D Queries:}
+\resumeItemListStart
+  \resumeItem{Engineered CLIP ViT-B/32 feature distillation into trained Gaussians with a semantic query engine, achieving 9/10 correct 3D object localizations on real captures (4/5 open-vocabulary, beyond closed-set detectors)}
+  \resumeItem{Built a ROS2+Gazebo autonomous capture pipeline (304 keyframes) feeding sim-side training data collection}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+\vspace{-6pt}
+
+%----------PROJECTS----------
+\section{Projects}
+\resumeSubHeadingListStart
+
+\resumeProjectHeading{Faster R-CNN Hyperparameter Optimization $|$ PyTorch, Optuna, W\&B, COCO, VisDrone}{Feb 2026}
+\resumeItemListStart
+  \resumeItem{Built a 4-stage Optuna HPO pipeline (training, RPN anchors, RoI sampling, inference) on COCO-2017; cut per-trial runtime 30 min $\rightarrow$ 8 min via deferred evaluation and improved tuned mAP 5\% over baseline on VisDrone with a custom VOC-to-COCO converter}
+\resumeItemListEnd
+
+\resumeProjectHeading{Robotics Semantic Perception Pipeline $|$ ROS2, YOLOv8, Zenoh, PostgreSQL, pgvector, Apache AGE}{Mar 2026}
+\resumeItemListStart
+  \resumeItem{Built an end-to-end sensor-to-database pipeline (TurtleBot3/Gazebo $\rightarrow$ ROS2 $\rightarrow$ YOLOv8 $\rightarrow$ Zenoh $\rightarrow$ PostgreSQL) ingesting 500+ detection events; extended with 512-dim embeddings in pgvector and a semantic graph enabling object re-localization}
+\resumeItemListEnd
+
+\resumeProjectHeading{UAV Drone Detection \& Multi-Object Tracking $|$ YOLOv8, Kalman Filter, OpenCV}{Mar 2026}
+\resumeItemListStart
+  \resumeItem{Fine-tuned YOLOv8n on 3,000+ drone images; built a custom 8-state Kalman tracker [cx, cy, w, h, vx, vy, vw, vh] with Hungarian-algorithm assignment and a full annotation pipeline overlaying tracks, predictions, and trajectory polylines}
+\resumeItemListEnd
+
+\resumeProjectHeading{Temporal Cycle-Consistency Self-Supervised Video Learning $|$ PyTorch}{Mar 2026}
+\resumeItemListStart
+  \resumeItem{Implemented TCC loss and temporal segmentation from scratch; swept embedding dimensions D=\{32, 64, 128\} with D=128 achieving best alignment (0.589), analyzed via PCA, UMAP, and t-SNE visualizations}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+\vspace{-6pt}
+
+%----------SKILLS----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.0in, label={}, itemsep=1pt, topsep=1pt]
+  \resumeItem{\textbf{Languages:} Python, C/C++, SQL, Java, Bash}
+  \resumeItem{\textbf{ML/DL Frameworks:} PyTorch, Transformers, Hugging Face, OpenCV, torchvision, CUDA (mixed-precision \& multi-GPU training)}
+  \resumeItem{\textbf{Computer Vision \& 3D Vision:} CLIP, YOLOv8, Faster R-CNN, COCO API, object detection \& tracking, segmentation, GradCAM/attention visualization, VideoMAE, self-supervised learning (TCC), 3D Gaussian Splatting (gsplat), COLMAP, point-cloud registration (ICP, Umeyama, FPFH+RANSAC)}
+  \resumeItem{\textbf{Robotics \& Systems:} ROS2, Gazebo, Zenoh, sensor fusion}
+  \resumeItem{\textbf{MLOps \& Data:} Weights \& Biases, Optuna, Docker, Git/GitHub Actions, AWS (EC2, S3), PostgreSQL, pgvector, vector databases}
+\end{itemize}
+
+\end{document}

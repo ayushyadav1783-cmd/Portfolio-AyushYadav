@@ -9,7 +9,7 @@
 - Real HTML text for all content (not canvas). Hit the spec's budgets: LCP < 2.5s on 4G, CLS < 0.05, first-load JS < 200kb gz. Lazy-load OGL, matter-js, and Howler after the intro.
 - Where a real project visual doesn't exist yet, use the halftone placeholder and list it as a TODO. Never use stock images.
 - Serve `assets/resume.pdf` as `/resume.pdf` and use `assets/portrait.png` in the portrait slot.
-- Never read, modify, or delete anything in `~/Downloads`.
+- Never read, modify, or delete anything in `~/Downloads` (one-off exception: Ayush approved copying `Ayush_Yadav_Resume_MASTER_FINAL.tex` on 2026-10-03).
 
 ## Sources of truth
 
@@ -23,6 +23,8 @@
 Ayush changed these after the spec was written. They're applied in the spec, content.json and copy.json:
 - GitHub is https://github.com/ayushyadav1783-cmd (2026-10-03).
 - The hero resume CTA reads `Resume` (no "1 page, I promise"), and Resume links open the Scouting Report overlay (spec §8.1) instead of the raw PDF (2026-10-03).
+- The Scouting Report never embeds the PDF (it contains the phone number); it shows a summary card and links to the PDF (2026-10-03).
+- `resume/resume.tex` is the resume source (copied from MASTER_FINAL.tex). Rebuild `assets/resume.pdf` from it; see resume/README.md.
 
 ## Fixed decisions (do not reopen)
 
