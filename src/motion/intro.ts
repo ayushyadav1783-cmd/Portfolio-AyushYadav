@@ -39,7 +39,7 @@ export function runIntro(): Promise<void> {
   const first = SplitText.create('[data-intro-first]', { type: 'chars', mask: 'chars' });
   const tagline = SplitText.create('.hero__tagline', { type: 'words' });
   gsap.set(first.chars, { yPercent: 110 });
-  gsap.set('[data-intro-last]', { clipPath: 'inset(0 100% 0 0)' });
+  const outline = buildOutlineStroke(q('[data-intro-last]'));
   gsap.set('[data-intro-stop]', { yPercent: -160, autoAlpha: 0 });
   gsap.set(['.hero__eyebrow', '.hero__sub', '.hero__cue'], { autoAlpha: 0 });
   gsap.set(tagline.words, { autoAlpha: 0, y: 14 });
@@ -69,7 +69,8 @@ export function runIntro(): Promise<void> {
   });
   // F3: name, outline, planet, full stop.
   tl.to(first.chars, { yPercent: 0, duration: 0.8, stagger: 0.028, ease: 'expo.out' }, 0.7)
-    .to('[data-intro-last]', { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power2.inOut' }, 0.85)
+    .to(outline.glyphs, { strokeDashoffset: 0, duration: 0.55, stagger: 0.07, ease: 'power2.inOut' }, 0.85)
+    .call(outline.done, [], 1.72)
     .to('[data-planet]', { scale: 1, autoAlpha: 1, duration: 0.7, ease: 'expo.out' }, 0.8)
     .fromTo('[data-planet]', { filter: 'brightness(1)' }, { filter: 'brightness(1.5)', duration: 0.2, yoyo: true, repeat: 1 }, 1.2)
     .to('[data-planet-ring]', { autoAlpha: 1, duration: 0.5 }, 1.0)
@@ -98,9 +99,10 @@ export function runIntro(): Promise<void> {
           // Hand the hero back to CSS and the scroll-driven walkout.
           gsap.set(hero, { clearProps: 'transform,filter,scale' });
           gsap.set([bar, hurry, lampBoxes, beams, lamps.flat(), '[data-planet]', '[data-planet-ring]'], { clearProps: 'all' });
+          outline.done();
           first.revert();
           tagline.revert();
-          gsap.set(['[data-intro-last]', '[data-intro-stop]', '.hero__eyebrow', '.hero__sub', '.hero__cue', '.hero__ctas > *'], { clearProps: 'all' });
+          gsap.set(['[data-intro-stop]', '.hero__eyebrow', '.hero__sub', '.hero__cue', '.hero__ctas > *'], { clearProps: 'all' });
           startScroll();
           ScrollTrigger.refresh();
           document.removeEventListener('keydown', onKey);
@@ -146,4 +148,64 @@ export function runIntro(): Promise<void> {
       .then(play);
     setTimeout(play, MAX_WAIT);
   });
+}
+
+/**
+ * "YADAV" outline draws its stroke left to right (spec §4.1 F3): an SVG copy of each glyph,
+ * placed exactly over the real text, with stroke-dashoffset animated per letter.
+ * The real outlined span is hidden while the copy draws, then swapped back.
+ */
+function buildOutlineStroke(span: HTMLElement) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const h1 = span.closest('h1')!;
+  const textNode = [...span.childNodes].find((n): n is Text => n.nodeType === Node.TEXT_NODE)!;
+  const cs = getComputedStyle(span);
+  const fontSize = parseFloat(cs.fontSize);
+  const box = h1.getBoundingClientRect();
+
+  // Baseline: a zero-size inline-block aligned to the baseline sits exactly on it.
+  const mark = document.createElement('span');
+  mark.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+  span.appendChild(mark);
+  const baseline = mark.getBoundingClientRect().top - box.top;
+  mark.remove();
+
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.style.cssText = `position:absolute;left:0;top:0;width:${box.width}px;height:${box.height}px;overflow:visible;pointer-events:none`;
+  const dash = fontSize * 6; // longer than any glyph outline, so 0 offset always means fully drawn
+  const range = document.createRange();
+  const glyphs: SVGTextElement[] = [];
+  const chars = textNode.data;
+  for (let i = 0; i < chars.length; i++) {
+    range.setStart(textNode, i);
+    range.setEnd(textNode, i + 1);
+    const r = range.getBoundingClientRect();
+    const t = document.createElementNS(NS, 'text');
+    t.textContent = chars[i].toUpperCase();
+    t.setAttribute('x', String(r.left - box.left));
+    t.setAttribute('y', String(baseline));
+    t.setAttribute('fill', 'none');
+    t.setAttribute('stroke', cs.webkitTextStrokeColor || '#f6f3ec');
+    t.setAttribute('stroke-width', String(parseFloat(cs.webkitTextStrokeWidth) || 2));
+    t.setAttribute('stroke-linejoin', 'round');
+    t.style.cssText = `font-family:${cs.fontFamily};font-weight:${cs.fontWeight};font-size:${fontSize}px;stroke-dasharray:${dash} ${dash};stroke-dashoffset:${dash}`;
+    svg.appendChild(t);
+    glyphs.push(t);
+  }
+  h1.style.position = 'relative';
+  h1.appendChild(svg);
+  span.style.visibility = 'hidden';
+
+  let swapped = false;
+  return {
+    glyphs,
+    done() {
+      if (swapped) return;
+      swapped = true;
+      span.style.visibility = '';
+      svg.remove();
+      h1.style.position = '';
+    },
+  };
 }
