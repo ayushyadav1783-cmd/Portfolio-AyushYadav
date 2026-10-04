@@ -48,16 +48,20 @@ export function initFanZone() {
   }
 }
 
-/** The background floods red from the centre (circle clip-path) over ~40vh, and drains back to night on exit. */
+/**
+ * The red floods down from the top edge as the section arrives (circle clip-path anchored at the top
+ * centre), complete by the time the section top is two thirds up the screen. No drain on exit:
+ * Ayush's rule is no black or plain screens, so the Fan Zone stays red once it has arrived.
+ */
 function flood(section: HTMLElement) {
   const layer = section.querySelector<HTMLElement>('[data-flood]');
   if (!layer) return;
   section.style.backgroundColor = 'var(--night)';
-  gsap.set(layer, { clipPath: 'circle(0% at 50% 50%)' });
-  gsap.timeline({ scrollTrigger: { trigger: section, start: 'top bottom', end: 'top 55%', scrub: 0.4 } })
-    .to(layer, { clipPath: 'circle(150% at 50% 50%)', ease: 'none' });
-  gsap.timeline({ scrollTrigger: { trigger: section, start: 'bottom 55%', end: 'bottom 10%', scrub: 0.4 } })
-    .fromTo(layer, { clipPath: 'circle(150% at 50% 50%)' }, { clipPath: 'circle(0% at 50% 50%)', ease: 'none', immediateRender: false });
+  gsap.fromTo(layer, { clipPath: 'circle(0% at 50% 0%)' }, {
+    clipPath: 'circle(160% at 50% 0%)',
+    ease: 'none',
+    scrollTrigger: { trigger: section, start: 'top bottom', end: 'top 65%', scrub: 0.3 },
+  });
   return () => { section.style.backgroundColor = ''; gsap.set(layer, { clearProps: 'clipPath' }); };
 }
 

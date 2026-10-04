@@ -86,7 +86,7 @@ The whole site is one match day at Ayush's stadium. Scrolling is the walkout: tu
 | Label | 12px, tracking .14em | same | mono, uppercase |
 | Stat | 15–32px | same | mono, weight 700, `--trophy` |
 
-**Layout:** max content width 1280px, gutters 40px desktop / 16px mobile, sections 140–168px apart desktop / 72–96px mobile.
+**Layout:** max content width 1280px, gutters 40px desktop / 16px mobile. *Changed on Ayush's feedback (2026-10-04): sections sit much closer (roughly 40–110px between content blocks) so no blank bands appear while scrolling.*
 
 ---
 
@@ -136,7 +136,7 @@ Morphs use GSAP over 250ms. Hide the native cursor only when the custom one has 
 ### 4.5 Section transitions
 
 - **MVP:** a "floodlight sweep". A white band at 15% opacity wipes diagonally across the viewport as each section's top crosses 60% of the viewport. CSS clip-path plus GSAP, 600ms.
-- **Into Fan Zone:** the background floods red from the center via an expanding circle clip-path, scrubbed to scroll over 40vh.
+- **Into Fan Zone:** the background floods red via an expanding circle clip-path, scrubbed to scroll. *Changed on Ayush's feedback (2026-10-04): the circle is anchored at the top centre so the section never shows black while entering, and there is no drain back to night on exit.*
 - **Into Full Time:** the red drains back to night and the stadium lights dim to 60% brightness.
 - **v2:** replace the sweeps with one OGL full-screen shader pass (noise-displaced wipe plus halftone dissolve) that every section shares.
 
