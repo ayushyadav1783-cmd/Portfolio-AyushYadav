@@ -172,7 +172,7 @@ The toggle sits in the broadcast bar ("Crowd: off"). Sounds: a low crowd bed, fl
 | Starfield | OGL point field (about 1,500 points, 3 depth layers), slow drift, twinkle via per-point sin. Mouse parallax: layer offsets of 4/10/18px. | always, paused when off-screen |
 | Planet | Glow breathes (6s loop). Parallax: rises 0.3× scroll speed, rotates 8° over the hero. | scroll scrub |
 | Towers + beams | Beams sway ±2° slowly (8s). Beams intensify to 1.4× as you start scrolling. | load / scroll |
-| Name | **Walkout scrub:** over the first 100vh of scroll the name scales 1→1.6 and letter-spacing opens up, while the stands rise to fill the screen (camera moving forward through the tunnel). At 100% the stands become the Warm-Up background. | ScrollTrigger pin hero for 100vh, scrub: true |
+| Name | **Changed on Ayush's feedback (2026-10-04): no pin.** The hero scrolls away naturally with parallax only (name drifts slower and grows slightly, planet rises and turns, beams brighten, copy fades late), so there are no extra scrolls or black frames. Original: **Walkout scrub:** over the first 100vh of scroll the name scales 1→1.6 and letter-spacing opens up, while the stands rise to fill the screen (camera moving forward through the tunnel). At 100% the stands become the Warm-Up background. | ScrollTrigger pin hero for 100vh, scrub: true |
 | Tagline / CTAs | Fade + y 20px out at 30% of the pin | scrub |
 | Ticker | Marquee 28s per loop. Scroll velocity speeds it up (up to 3×) and skews it ±6°. | always + velocity |
 | Buttons | Magnetic (see 6.4) | hover |

@@ -27,6 +27,7 @@ Ayush changed these after the spec was written. They're applied in the spec, con
 - Starting VII: cards on the pitch from the start (no run-out); the fitted pitch tilts up while scrolling in, then a 40vh pin holds and zooms to 100% (2026-10-04).
 - Full Time: the chat is replaced by a penalty shootout → transfer bid (spec §5.6 note) (2026-10-04).
 - Fan Zone: each sticker gets its own signature full-screen trick on click (2026-10-04).
+- Hero: no walkout pin; parallax-only exit. Rule from Ayush: no useless scrolls, no black or plain screens anywhere (2026-10-04).
 - `resume/resume.tex` is the resume source (copied from MASTER_FINAL.tex). Rebuild `assets/resume.pdf` from it; see resume/README.md.
 
 ## Fixed decisions (do not reopen)

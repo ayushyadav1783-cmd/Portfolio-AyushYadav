@@ -37,20 +37,23 @@ export function initReveals() {
   typewriter();
 }
 
-/** Spec §5.1: pin the hero for 100vh; the name grows while the stands rise like a camera moving forward. */
+/**
+ * Hero exit (changed on Ayush's feedback, 2026-10-04): no pin, no extra scroll and no black frames.
+ * As the hero scrolls away naturally, the layers move at different speeds for depth: the name lifts
+ * away slightly faster than the page, the planet rises and turns, the floodlights brighten, the copy fades late.
+ */
 function walkout() {
   const hero = $('[data-hero]');
   if (!hero) return;
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
-    scrollTrigger: { trigger: hero, start: 'top top', end: '+=100%', pin: true, scrub: true },
+    scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
   });
-  tl.to('[data-walk-name]', { scale: 1.6, letterSpacing: '0.06em', duration: 1 }, 0)
-    .to('[data-walk-fade]', { autoAlpha: 0, y: -20, duration: 0.3, stagger: 0.02 }, 0)
-    .to('[data-stands]', { yPercent: -55, scaleX: 1.15, duration: 1 }, 0)
-    .to('[data-planet]', { yPercent: -30, rotate: 8, duration: 1 }, 0)
-    .to('[data-planet-ring]', { yPercent: -30, duration: 1 }, 0)
-    .to('[data-beam]', { filter: 'brightness(1.4)', duration: 0.3 }, 0);
+  tl.to('[data-walk-name]', { yPercent: -22, scale: 1.06, duration: 1 }, 0)
+    .to('[data-walk-fade]', { autoAlpha: 0, y: -24, duration: 0.35, stagger: 0.03 }, 0.3)
+    .to('[data-planet]', { yPercent: -40, rotate: 8, duration: 1 }, 0)
+    .to('[data-planet-ring]', { yPercent: -40, rotate: -4, duration: 1 }, 0)
+    .to('[data-beam]', { filter: 'brightness(1.4)', duration: 0.4 }, 0);
 }
 
 function textReveals() {
