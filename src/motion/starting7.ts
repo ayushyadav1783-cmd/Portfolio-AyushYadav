@@ -22,10 +22,10 @@ export function initStartingVII() {
 }
 
 /**
- * Broadcast camera (agreed with Ayush, shortened on his feedback): the whole formation is on the
- * pitch from the first frame. While pinned for 70vh, the pitch is fitted to the screen and tilts
- * up from lying flat to face the camera, the 7 gets a gold flash, then the camera zooms to 100%
- * as the pin releases so scrolling continues at full size.
+ * Broadcast camera (agreed with Ayush, tightened on his feedback). The whole formation is on the
+ * pitch from the first frame, already fitted to the screen. It tilts up while the section scrolls in
+ * (no pin, no empty frames), then pins for a short 40vh: a hold to read the line-up, the 7 catching
+ * the floodlights, and the camera zooming to 100% as the pin releases.
  */
 function pinSequence(stage: HTMLElement, pitch: HTMLElement) {
   let fit = 1;
@@ -38,30 +38,33 @@ function pinSequence(stage: HTMLElement, pitch: HTMLElement) {
   };
   measure();
   const st = pitch.querySelector<HTMLElement>('[data-slot="ST"]')!;
-
   gsap.set(pitch, { transformOrigin: '50% 0%', transformPerspective: 1600 });
+
+  // Approach: tilt up quickly as it scrolls in.
+  gsap.fromTo(pitch, { rotationX: 38 }, {
+    rotationX: 0,
+    ease: 'power2.out',
+    scrollTrigger: { trigger: stage, start: 'top 85%', end: 'top 20%', scrub: 0.4 },
+  });
+
+  // Pinned: hold to view the line-up, then zoom to full size.
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
       trigger: stage,
       start: 'top top',
-      end: '+=70%',
+      end: '+=40%',
       pin: true,
-      scrub: 0.6,
+      scrub: 0.5,
       invalidateOnRefresh: true,
       onRefreshInit: measure,
     },
   });
-
-  // 0–60%: cards lying on the ground, pitch flat and far, tilting up to face the camera.
-  tl.fromTo(pitch, { rotationX: 60, scale: () => fit * 0.7, y: () => offY },
-    { rotationX: 0, scale: () => fit, y: () => offY, duration: 0.6, ease: 'power1.inOut' }, 0);
-  // The 7 catches the floodlights as the pitch comes up.
-  tl.fromTo(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))' },
-    { filter: 'brightness(1.5) drop-shadow(0 0 36px rgba(245,197,66,.85))', duration: 0.08 }, 0.52)
-    .to(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))', duration: 0.12 }, 0.6);
-  // 60–100%: camera zooms to 100% so normal scrolling continues at full size.
-  tl.to(pitch, { scale: 1, y: 0, duration: 0.4, ease: 'power2.inOut' }, 0.6);
+  tl.fromTo(pitch, { scale: () => fit, y: () => offY }, { scale: () => fit, y: () => offY, duration: 0.45 }, 0)
+    .fromTo(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))' },
+      { filter: 'brightness(1.5) drop-shadow(0 0 36px rgba(245,197,66,.85))', duration: 0.12 }, 0.08)
+    .to(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))', duration: 0.2 }, 0.2)
+    .to(pitch, { scale: 1, y: 0, duration: 0.55, ease: 'power2.inOut' }, 0.45);
 
   return () => gsap.set([pitch, st], { clearProps: 'all' });
 }
