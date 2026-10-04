@@ -1,0 +1,32 @@
+---
+// SIUUU easter egg (spec §7, board 05): seven taps on the 7 in the broadcast bar within 4 s.
+---
+
+<dialog class="siu" aria-labelledby="siu-h" data-siu>
+  <div class="siu__confetti" aria-hidden="true" data-siu-confetti></div>
+  <div class="siu__burst" aria-hidden="true" data-siu-burst></div>
+  <h2 id="siu-h" class="siu__title d" data-siu-title>Siuuu!</h2>
+  <p class="siu__text" data-siu-text>You found it. Seven taps on the 7. Respect.<br /><span class="muted">Now imagine how thorough I'd be on your codebase.</span></p>
+  <button type="button" class="btn btn--gold" data-siu-close>Back to the match</button>
+</dialog>
+
+<style>
+  .siu {
+    width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 24px; border: 0;
+    background: var(--night); color: var(--floodlight); overflow: hidden; text-align: center;
+  }
+  .siu[open] { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
+  .siu::backdrop { background: var(--night); }
+  .siu__confetti, .siu__burst { position: absolute; pointer-events: none; }
+  .siu__confetti { inset: 0; }
+  .siu__burst {
+    left: 50%; top: 50%; width: 140vmax; height: 140vmax; translate: -50% -50%;
+    background: repeating-conic-gradient(rgba(245, 197, 66, .08) 0 6deg, transparent 6deg 18deg);
+  }
+  .siu__title {
+    position: relative; margin: 0; font-weight: 900; font-size: clamp(110px, 22vw, 340px); line-height: .8;
+    color: var(--trophy); text-shadow: 8px 8px 0 var(--red-card);
+  }
+  .siu__text { position: relative; margin: 0; max-width: 520px; font-size: 20px; line-height: 1.45; }
+  .siu .btn { position: relative; }
+</style>

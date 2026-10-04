@@ -14,6 +14,7 @@ import { initCardArt } from './cardart';
 import { initTraining } from './training';
 import { initCursor } from './cursor';
 import { initMagnetic } from './magnetic';
+import { initEggs } from './eggs';
 import { finePointer, reducedMotion } from './env';
 
 initScroll();
@@ -27,6 +28,7 @@ initFanZone();
 initHighlights();
 initCardArt();
 initTraining();
+initEggs();
 // The bar's clock and bugs start once the walkout is over; heavier extras load after it.
 runIntro().then(() => {
   initBroadcast();

@@ -90,6 +90,39 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
 .is-magnetic { translate: calc(var(--mx, 0) * 1px) calc(var(--my, 0) * 1px); }
 .mag-label { display: inline-flex; align-items: center; justify-content: inherit; gap: inherit; translate: calc(var(--lx, 0) * 1px) calc(var(--ly, 0) * 1px); }
 
+/* ---- Easter eggs (spec §7) ---- */
+html.anime main, html.anime footer { filter: contrast(1.25) saturate(1.35); }
+html.anime body::after {
+  content: ''; position: fixed; inset: 0; z-index: 50; pointer-events: none; mix-blend-mode: multiply;
+  background-image: radial-gradient(circle, rgba(8, 8, 11, .38) 1px, transparent 1.6px); background-size: 5px 5px;
+}
+html.anime .title-xl, html.anime .hero__name, html.anime .ft__title, html.anime .warmup__h { position: relative; isolation: isolate; }
+html.anime .title-xl::before, html.anime .hero__name::before, html.anime .ft__title::before, html.anime .warmup__h::before {
+  content: ''; position: absolute; inset: -30% -15%; z-index: -1; pointer-events: none;
+  background: repeating-conic-gradient(from 0deg at 25% 55%, rgba(255, 74, 61, .4) 0 1.5deg, transparent 1.5deg 7deg);
+  -webkit-mask: radial-gradient(ellipse at 25% 55%, transparent 18%, #000 60%); mask: radial-gradient(ellipse at 25% 55%, transparent 18%, #000 60%);
+}
+.sfx {
+  position: fixed; z-index: 2002; translate: -50% -60%; pointer-events: none; text-transform: uppercase; white-space: nowrap;
+  font: 900 clamp(44px, 6vw, 72px) var(--font-display); color: var(--trophy);
+  -webkit-text-stroke: 3px var(--night); text-shadow: 5px 5px 0 var(--red-card);
+}
+.egg-toast {
+  position: fixed; left: 50%; bottom: 28px; translate: -50% 0; z-index: 2003; margin: 0; padding: 12px 18px;
+  border-radius: var(--r-pill); background: var(--trophy); color: var(--on-trophy);
+  font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; visibility: hidden; opacity: 0;
+}
+.houston {
+  position: absolute; z-index: 5; translate: -50% 0; margin: 0; padding: 8px 12px; border-radius: var(--r-chip);
+  background: var(--stand); border: 1px solid var(--trophy); color: var(--trophy);
+  font-size: 12px; letter-spacing: .1em; white-space: nowrap; visibility: hidden; opacity: 0; pointer-events: none;
+}
+.bar-net {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: repeating-linear-gradient(45deg, rgba(245, 197, 66, .35) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(-45deg, rgba(245, 197, 66, .35) 0 1px, transparent 1px 12px);
+}
+
 /* WebGL sky replaces the CSS stars and paints the planet itself. */
 .has-gl-sky .star { display: none; }
 .has-gl-planet { background: transparent !important; }
