@@ -1,5 +1,9 @@
 import content from './content.json';
 import copy from './copy.json';
+import reposJson from './repos.json';
+
+export type Repo = { url?: string; label: string; private?: boolean };
+export const repos = reposJson as unknown as Record<string, Repo>;
 
 export type Project = (typeof content.projects)[number];
 export type PowerUp = (typeof content.powerups)[number];
