@@ -140,7 +140,32 @@
     "line": "Things I will talk about for 90 minutes plus stoppage time. You've been warned.",
     "ticker1": "Real Madrid ✦ CR7 ✦ One Piece ✦ Naruto ✦ Spider-Man ✦ Iron Man ✦ Space ✦ Football ✦",
     "ticker2": "SIUUU ✦ Hala Madrid ✦ Believe it ✦ Nakama ✦ Friendly neighbourhood ✦ To infinity and the Kármán line ✦",
-    "hint": "STICKERS ARE DRAGGABLE. THROW THEM. THEY BOUNCE."
+    "hint": "STICKERS ARE DRAGGABLE. THROW THEM. THEY BOUNCE.",
+    "hintTricks": "CLICK ONE. EACH HAS A MOVE.",
+    "hintTouch": "TAP ONE. EACH HAS A MOVE.",
+    "tricks": {
+      "_note": "Signature trick per sticker (content.json order), added on Ayush's request 2026-10-04. Words and original shapes only.",
+      "ids": [
+        "wave",
+        "siuuu",
+        "stretch",
+        "clones",
+        "web",
+        "blast",
+        "blackhole",
+        "goal"
+      ],
+      "shouts": [
+        "HALA MADRID!",
+        "SIUUU!",
+        "NAKAMA!",
+        "BELIEVE IT!",
+        "THWIP!",
+        "BOOM.",
+        "EVENT HORIZON",
+        "GOAL!"
+      ]
+    }
   },
   "fulltime": {
     "bugTime": "90'+",

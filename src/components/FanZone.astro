@@ -16,7 +16,8 @@ const looks = [
 ];
 ---
 
-<section id="fanzone" class="fan" aria-labelledby="fan-h" data-zone data-halftime>
+<section id="fanzone" class="fan" aria-labelledby="fan-h" data-zone data-halftime data-fan>
+  <div class="fan__flood" aria-hidden="true" data-flood></div>
   <div class="fan__dots" aria-hidden="true"></div>
   <div class="wrap fan__head">
     <Bug time={f.bugTime} label={f.bug} variant="dark" />
@@ -26,28 +27,34 @@ const looks = [
 
   <div class="fan__tickers" aria-hidden="true">
     <div class="fan__band fan__band--1">
-      <div class="marquee d"><span>{f.ticker1}</span><span>{f.ticker1}</span></div>
+      <div class="marquee marquee--run d" data-velocity><span>{f.ticker1}</span><span>{f.ticker1}</span></div>
     </div>
     <div class="fan__band fan__band--2">
-      <div class="marquee d"><span>{f.ticker2}</span><span>{f.ticker2}</span></div>
+      <div class="marquee marquee--rev d" data-velocity><span>{f.ticker2}</span><span>{f.ticker2}</span></div>
     </div>
   </div>
 
-  <ul class="wrap fan__stickers">
+  <ul class="wrap fan__stickers" data-stickers>
     {content.stickers.map((s, i) => {
       const k = looks[i % looks.length];
       return (
-        <li
-          class="stk"
-          style={`--rot:${k.rot}deg;padding:${k.pad};border-radius:${k.radius};background:${k.bg};color:${k.ink}`}
-        >
-          <span class="stk__big d" style={`font-size:${k.size}px`}>{s.big}</span>
-          <span class="stk__small">{s.small}</span>
+        <li class="stk-slot" data-slot-i={i}>
+          <button
+            type="button"
+            class="stk"
+            data-sticker={i}
+            data-trick={f.tricks.ids[i]}
+            data-shout={f.tricks.shouts[i]}
+            style={`--rot:${k.rot}deg;padding:${k.pad};border-radius:${k.radius};background:${k.bg};color:${k.ink}`}
+          >
+            <span class="stk__big d" style={`font-size:${k.size}px`}>{s.big}</span>
+            <span class="stk__small">{s.small}</span>
+          </button>
         </li>
       );
     })}
   </ul>
-  <p class="fan__hint m">{f.hint}</p>
+  <p class="fan__hint m"><span class="fan__hint-fine">{f.hint} {f.hintTricks}</span><span class="fan__hint-touch">{f.hintTouch}</span></p>
 </section>
 
 <style>
@@ -69,22 +76,37 @@ const looks = [
   .fan__band--1 { top: 30px; transform: rotate(-4deg); background: var(--night); color: var(--trophy); }
   .fan__band--1 .marquee { gap: 32px; padding: 14px 0; font-weight: 900; font-size: 44px; }
   .fan__band--2 { top: 96px; transform: rotate(3deg); background: var(--floodlight); color: var(--night); }
-  .fan__band--2 .marquee { gap: 32px; padding: 12px 0; font-weight: 800; font-size: 34px; transform: translateX(-50%); }
+  .fan__band--2 .marquee { gap: 32px; padding: 12px 0; font-weight: 800; font-size: 34px; }
 
   .fan__stickers {
     position: relative; list-style: none; margin: 40px auto 0;
     display: flex; flex-wrap: wrap; justify-content: center; gap: 22px 26px;
   }
+  .stk-slot { display: flex; }
   .stk {
     max-width: 300px; border: 3px solid var(--night); box-shadow: 6px 6px 0 var(--night);
+    font: inherit; text-align: left; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation;
     transform: rotate(var(--rot)); transition: transform .25s var(--ease-spring);
   }
-  .stk:hover { transform: rotate(0deg) scale(1.08); }
+  .stk:hover, .stk:focus-visible { transform: rotate(0deg) scale(1.08); }
+  .stk:focus-visible { outline: 3px solid var(--night); outline-offset: 4px; }
+  /* Physics mode (desktop): stickers are positioned by matter-js inside a fixed-height pit. */
+  .fan__stickers.is-physics { position: relative; display: block; }
+  .fan__stickers.is-physics .stk-slot { position: absolute; left: 0; top: 0; }
+  .fan__stickers.is-physics .stk { transform: none; transition: none; cursor: grab; }
+  .fan__stickers.is-physics .stk:active { cursor: grabbing; }
+  .fan__flood { position: absolute; inset: 0; background: var(--red-card); }
+  .fan__band:hover .marquee { animation-play-state: paused; }
+  .marquee--rev { animation: mqr 32s linear infinite; }
+  @keyframes mqr { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  .fan__hint-touch { display: none; }
+  @media (hover: none), (pointer: coarse) { .fan__hint-fine { display: none; } .fan__hint-touch { display: inline; } }
   .stk__big { display: block; font-weight: 900; line-height: .95; }
   .stk__small { display: block; margin-top: 6px; font-size: 14px; line-height: 19px; font-weight: 600; }
   .fan__hint { position: relative; text-align: center; margin: 36px 0 0; font-size: 11px; letter-spacing: .14em; font-weight: 700; }
 
   @media (prefers-reduced-motion: reduce) {
-    .stk:hover { transform: rotate(var(--rot)); }
+    .stk:hover, .stk:focus-visible { transform: rotate(var(--rot)); }
+    .marquee--rev { animation: none; }
   }
 </style>

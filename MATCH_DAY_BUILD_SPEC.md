@@ -281,7 +281,7 @@ The toggle sits in the broadcast bar ("Crowd: off"). Sounds: a low crowd bed, fl
 | Tickers | Opposite marquees. Scroll velocity speeds them up and skews them. Hovering a band pauses it. | always |
 | Stickers | **Desktop:** matter-js bodies drop in from above on enter (gravity, bounce .5), land in a loose pile, and are draggable and throwable, colliding with each other and the section walls. **Mobile / reduced motion:** static rotated grid, tap to wobble. | enter / drag |
 | Sticker hover | Straightens to 0° and scales 1.08 (spring) | hover |
-| Double-click sticker | Peels: a corner curls via a CSS 3D transform and reveals a hidden one-liner on the back | dblclick |
+| Click / tap / Enter on a sticker | **Added on Ayush's request (2026-10-04), replaces the double-click peel:** each sticker plays its own full-screen signature trick (copy.json → fanzone.tricks): Hala Madrid = white/gold card-stunt wave; CR7 = spin-up + SIUUU shockwave knocking the others back; Nakama = rubber stretch that pulls the crew in; Believe it = shadow clones that vanish in smoke; Friendly neighbourhood = web lines and rings + thwip; Genius = repulsor charge, flash and blast; Space nerd = black hole that swallows the stickers and spits them out; Football = ball bounces across the screen into a bulging net, GOAL. A drag over 6px is a throw, not a click. Reduced motion: the shout fades in and out only. | click |
 | Cursor | Turns into the spinning football | in section |
 
 ### 5.6 Full Time Whistle (Contact)
