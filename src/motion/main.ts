@@ -2,7 +2,9 @@
 import { initScroll } from './scroll';
 import { initBroadcast } from './broadcast';
 import { initReveals } from './reveals';
+import { initScouting } from './scouting';
 
 initScroll();
 initReveals();
 initBroadcast();
+initScouting();

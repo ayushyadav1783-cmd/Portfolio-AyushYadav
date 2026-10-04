@@ -1,11 +1,26 @@
 {
   "_note": "Section copy from MATCH_DAY_BUILD_SPEC.md §5 and §8, verbatim. Projects, power-ups, stickers and highlights live in content.json.",
   "nav": [
-    { "href": "#warmup", "label": "WARM-UP" },
-    { "href": "#xi", "label": "STARTING VII" },
-    { "href": "#powerups", "label": "POWER-UPS" },
-    { "href": "#fanzone", "label": "FAN ZONE" },
-    { "href": "#fulltime", "label": "FULL TIME" }
+    {
+      "href": "#warmup",
+      "label": "WARM-UP"
+    },
+    {
+      "href": "#xi",
+      "label": "STARTING VII"
+    },
+    {
+      "href": "#powerups",
+      "label": "POWER-UPS"
+    },
+    {
+      "href": "#fanzone",
+      "label": "FAN ZONE"
+    },
+    {
+      "href": "#fulltime",
+      "label": "FULL TIME"
+    }
   ],
   "bar": {
     "live": "LIVE",
@@ -21,7 +36,7 @@
     "taglineB": "Defenders mostly just see my back.",
     "sub": "AI Research Assistant @ Aegean AI Lab · Free agent from May 2027",
     "ctaPrimary": "Walk out with me",
-    "ctaSecondary": "Resume (1 page, I promise)",
+    "ctaSecondary": "Resume",
     "scrollCue": "SCROLL TO WALK OUT",
     "ticker": "Computer vision ✦ 3D Gaussian Splatting ✦ Robotics ✦ Camera geometry ✦ Sim-to-real ✦ Open-vocab perception ✦ Kickoff May 2027 ✦"
   },
@@ -36,29 +51,81 @@
     "p2": "I build the eyes for robots: 3D Gaussian Splatting, camera geometry, and the alignment math that makes an arm grab the cup instead of the table. Off the clock it's football, anime, and space documentaries at 2 a.m. I treat bugs like defenders. Study the tape, find the gap, finish.",
     "drillsTitle": "TODAY'S DRILLS",
     "drills": [
-      { "t": "Register 621 of 621 frames", "done": true },
-      { "t": "Reconstruct a whole lab at 29.60 dB PSNR", "done": true },
-      { "t": "Catch ICP lying about a 28° tilt", "done": true },
-      { "t": "Find 9 of 10 objects in 3D from plain words", "done": true },
-      { "t": "Sign a new-grad contract (May 2027, your club?)", "done": false }
+      {
+        "t": "Register 621 of 621 frames",
+        "done": true
+      },
+      {
+        "t": "Reconstruct a whole lab at 29.60 dB PSNR",
+        "done": true
+      },
+      {
+        "t": "Catch ICP lying about a 28° tilt",
+        "done": true
+      },
+      {
+        "t": "Find 9 of 10 objects in 3D from plain words",
+        "done": true
+      },
+      {
+        "t": "Sign a new-grad contract (May 2027, your club?)",
+        "done": false
+      }
     ],
     "portraitAlt": "Ayush Yadav in a blue jacket, looking at the camera",
     "portraitHint": "HOVER: HALFTONE → FULL COLOUR",
     "profile": [
-      ["POSITION", "Computer vision · 3D vision · Robotics"],
-      ["PREFERRED FOOT", "Python. C++ when it gets serious."],
-      ["CURRENT CLUB", "NJIT, MS in AI · GPA 3.83/4.00"],
-      ["ON LOAN AT", "Aegean AI Lab, Summer of Agents 2026 (3 spots, got one)"],
-      ["ACADEMY", "B.Tech Computer Engineering, Ramrao Adik Institute of Technology, 2021–2025"],
-      ["HOME GROUND", "Harrison, NJ"],
-      ["CONTRACT", "Free agent from May 2027"]
+      [
+        "POSITION",
+        "Computer vision · 3D vision · Robotics"
+      ],
+      [
+        "PREFERRED FOOT",
+        "Python. C++ when it gets serious."
+      ],
+      [
+        "CURRENT CLUB",
+        "NJIT, MS in AI · GPA 3.83/4.00"
+      ],
+      [
+        "ON LOAN AT",
+        "Aegean AI Lab, Summer of Agents 2026 (3 spots, got one)"
+      ],
+      [
+        "ACADEMY",
+        "B.Tech Computer Engineering, Ramrao Adik Institute of Technology, 2021–2025"
+      ],
+      [
+        "HOME GROUND",
+        "Harrison, NJ"
+      ],
+      [
+        "CONTRACT",
+        "Free agent from May 2027"
+      ]
     ]
   },
   "xi": {
     "bugTime": "30'",
     "bug": "TEAM SHEET · 1-1-2-3",
     "intro": "Seven projects, one formation. Seven because 7-a-side is a real format. Also, look at my shirt. Hover a card to scout it, click to read the full match report.",
-    "formation": [["LW", "ST", "RW"], ["CAM", "CM"], ["CB"], ["GK"]]
+    "formation": [
+      [
+        "LW",
+        "ST",
+        "RW"
+      ],
+      [
+        "CAM",
+        "CM"
+      ],
+      [
+        "CB"
+      ],
+      [
+        "GK"
+      ]
+    ]
   },
   "powerups": {
     "bugTime": "40'",
@@ -88,9 +155,18 @@
       "Recruiter, engineer, fellow Madridista? Pick a reply."
     ],
     "replies": [
-      { "chip": "We're hiring", "answer": "Music to my ears. ayushyadav1783@gmail.com, I reply fast. Or tap copy on the right." },
-      { "chip": "Send the resume", "answer": "One page, no fluff. It's the 'Resume' link right there. Highlight reel included." },
-      { "chip": "SIUUU", "answer": "SIUUUUU. You're one of us now. Hint: tap the 7 up top seven times." }
+      {
+        "chip": "We're hiring",
+        "answer": "Music to my ears. ayushyadav1783@gmail.com, I reply fast. Or tap copy on the right."
+      },
+      {
+        "chip": "Send the resume",
+        "answer": "One page, no fluff. It's the 'Resume' link right there. Highlight reel included."
+      },
+      {
+        "chip": "SIUUU",
+        "answer": "SIUUUUU. You're one of us now. Hint: tap the 7 up top seven times."
+      }
     ],
     "inputLabel": "Message Ayush",
     "inputPlaceholder": "Slide into my DMs (opens your email)…",
@@ -100,9 +176,21 @@
     "copiedLabel": "Copied. GOOOAL.",
     "copiedHint": "✓ IN YOUR CLIPBOARD",
     "links": [
-      { "label": "GitHub", "key": "github", "desc": "where the code lives" },
-      { "label": "LinkedIn", "key": "linkedin", "desc": "the version of me with capital letters" },
-      { "label": "Resume", "key": "resume", "desc": "the 1-page highlight reel" }
+      {
+        "label": "GitHub",
+        "key": "github",
+        "desc": "where the code lives"
+      },
+      {
+        "label": "LinkedIn",
+        "key": "linkedin",
+        "desc": "the version of me with capital letters"
+      },
+      {
+        "label": "Resume",
+        "key": "resume",
+        "desc": "the 1-page highlight reel"
+      }
     ],
     "availability": "Graduating May 2027. Open to new-grad roles in computer vision, 3D vision and robotics. Based in Harrison, NJ.",
     "footer": "© 2026 Ayush Yadav · built with caffeine and a few million Gaussians ·",
@@ -116,5 +204,16 @@
     "summaryGold": "Looking for new-grad roles in computer vision, 3D vision and robotics.",
     "stack": "PyTorch · CUDA · gsplat · COLMAP · CLIP · YOLOv8 · ROS2 · Gazebo · Optuna · W&B · Docker · AWS",
     "exit": "Actually, I have time. Take me back to the match."
+  },
+  "scouting": {
+    "stripe": "VAR CHECK IN PROGRESS",
+    "kicker": "VAR CHECK · SCOUTING REPORT",
+    "title": "Scouting report",
+    "sub": "Ayush Yadav · No. 7",
+    "stamp": "CLEARED ✓",
+    "download": "Download PDF",
+    "open": "Open in new tab",
+    "close": "Back to the match",
+    "frameTitle": "Ayush Yadav resume (PDF)"
   }
 }

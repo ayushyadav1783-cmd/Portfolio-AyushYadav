@@ -52,7 +52,7 @@ const hrefs: Record<string, string> = {
       <ul class="links">
         {f.links.map((l) => (
           <li>
-            <a href={hrefs[l.key]} class="link" rel={l.key === 'resume' ? undefined : 'me noopener'}>
+            <a href={hrefs[l.key]} class="link" rel={l.key === 'resume' ? undefined : 'me noopener'} data-resume={l.key === 'resume' ? '' : undefined}>
               {l.label} <span class="link__desc">{l.desc}</span>
             </a>
           </li>

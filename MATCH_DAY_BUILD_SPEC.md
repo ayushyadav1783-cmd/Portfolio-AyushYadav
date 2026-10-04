@@ -161,7 +161,7 @@ The toggle sits in the broadcast bar ("Crowd: off"). Sounds: a low crowd bed, fl
 - Tagline: **I teach robots to see the world in 3D.** *Defenders mostly just see my back.* (the second sentence in gold)
 - Sub: `AI Research Assistant @ Aegean AI Lab · Free agent from May 2027`
 - CTA primary: `Walk out with me ↓` (scrolls to Warm-Up)
-- CTA secondary: `Resume (1 page, I promise)` (opens `/resume.pdf`)
+- CTA secondary: `Resume` (opens the Scouting Report overlay, see §8.1; `/resume.pdf` is the no-JS fallback)
 - Scroll cue: `SCROLL TO WALK OUT`
 - Ticker: `Computer vision ✦ 3D Gaussian Splatting ✦ Robotics ✦ Camera geometry ✦ Sim-to-real ✦ Open-vocab perception ✦ Kickoff May 2027 ✦`
 
@@ -303,7 +303,7 @@ The toggle sits in the broadcast bar ("Crowd: off"). Sounds: a low crowd bed, fl
 - Input placeholder: `Slide into my DMs (opens your email)…` Submit opens `mailto:ayushyadav1783@gmail.com?subject=Saw your portfolio&body=<message>`.
 - Copy button: `ayushyadav1783@gmail.com` / `TAP TO COPY` → `Copied. GOOOAL.` / `✓ IN YOUR CLIPBOARD` (2.2s)
 - Links (the tooltip/description on the right of each row):
-  - GitHub → https://github.com/ary22-gif — "where the code lives"
+  - GitHub → https://github.com/ayushyadav1783-cmd — "where the code lives"
   - LinkedIn → https://www.linkedin.com/in/ayush-yadav-87ab581a5 — "the version of me with capital letters"
   - Resume → /resume.pdf — "the 1-page highlight reel"
 - Availability: Graduating May 2027. Open to new-grad roles in computer vision, 3D vision and robotics. Based in Harrison, NJ.
@@ -379,6 +379,18 @@ The red pill opens an overlay (dialog, focus trapped, Esc closes, URL `#highligh
 
 Motion: a broadcast "replay" wipe opens it (a red stripe sweeps across, 400ms, then the content fades up). There's no other choreography, because recruiters are busy.
 
+### 8.1 Scouting Report (resume viewer). Added on Ayush's request, 2026-10-03
+
+Every "Resume" link (hero CTA, Full Time row) opens an in-page **Scouting Report** instead of jumping straight to the PDF. `/resume.pdf` stays the `href`, so it still works without JS.
+
+- Dialog: native `<dialog>`, focus contained, Esc closes, URL `#resume`.
+- Kicker: `VAR CHECK · SCOUTING REPORT` · Title: **Scouting report** · Sub: `Ayush Yadav · No. 7`
+- Desktop (fine pointer): the PDF itself in a framed sheet (loaded only on first open). Mobile/touch: a summary card built from `content.json → person` (headline, education, experience) instead of an embedded PDF, since mobile browsers don't render inline PDFs well.
+- Buttons: `Download PDF` (download attribute) · `Open in new tab` · `Back to the match`
+- Stamp: `CLEARED ✓`
+
+**Motion:** a red "VAR CHECK IN PROGRESS" stripe sweeps across (400ms) → the sheet rises from below with a rotateX 25°→0 tilt (expo.out, 700ms) → a gold scanline sweeps down the sheet (800ms) → the `CLEARED ✓` stamp thumps in (scale 2→1, −12°, spring) with a 3px shake. Closing drops the sheet back down. Reduced motion: fades only.
+
 ---
 
 ## 9. Accessibility and performance
@@ -421,7 +433,7 @@ Motion: a broadcast "replay" wipe opens it (a red stripe sweeps across, 400ms, t
     "name": "Ayush Yadav",
     "fullName": "Ayush Ramashankar Yadav",
     "email": "ayushyadav1783@gmail.com",
-    "github": "https://github.com/ary22-gif",
+    "github": "https://github.com/ayushyadav1783-cmd",
     "linkedin": "https://www.linkedin.com/in/ayush-yadav-87ab581a5",
     "location": "Harrison, NJ",
     "resume": "/resume.pdf",

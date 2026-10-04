@@ -18,6 +18,12 @@
 3. If any skill suggests different styles, colors, or fonts, the spec and design win. Every time.
 4. If the spec is ambiguous, contradicts the design, or would blow the performance budget: stop and ask Ayush.
 
+## Approved changes to the spec
+
+Ayush changed these after the spec was written. They're applied in the spec, content.json and copy.json:
+- GitHub is https://github.com/ayushyadav1783-cmd (2026-10-03).
+- The hero resume CTA reads `Resume` (no "1 page, I promise"), and Resume links open the Scouting Report overlay (spec §8.1) instead of the raw PDF (2026-10-03).
+
 ## Fixed decisions (do not reopen)
 
 - Astro + React islands, TypeScript, deployed on Vercel. Not Next.js.
