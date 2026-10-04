@@ -1,0 +1,266 @@
+---
+// Training Ground (Ayush's request, 2026-10-04): live in-browser drills of his top five projects.
+// Each drill's code loads only when its tab is started. Without JS the explainers still read fine.
+import { content, copy, repos } from '../content';
+import Bug from './Bug.astro';
+const t = copy.training;
+const byKit = Object.fromEntries(content.projects.map((p) => [p.kit, p]));
+---
+
+<section id="training" class="tg wrap" aria-labelledby="tg-h" data-zone data-training>
+  <Bug time={t.bugTime} label={t.bug} />
+  <div class="section-head">
+    <h2 id="tg-h" class="title-xl d">{t.titleA} <span class="gold">{t.titleB}</span></h2>
+    <p data-reveal="fade">{t.intro}</p>
+  </div>
+  <p class="tg__honesty m">{t.honesty}</p>
+
+  <div class="tg__tabs" role="tablist" aria-label="Drills">
+    {t.drills.map((d, i) => (
+      <button
+        type="button"
+        role="tab"
+        class="tg__tab"
+        id={`tg-tab-${d.id}`}
+        aria-controls={`tg-panel-${d.id}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        tabindex={i === 0 ? 0 : -1}
+        data-tg-tab={d.id}
+      >
+        <span class="tg__tab-kit d">{d.kit}</span>
+        <span class="tg__tab-text"><span class="tg__tab-name d">{d.name}</span><span class="tg__tab-tag m">{d.tag}</span></span>
+      </button>
+    ))}
+  </div>
+
+  {t.drills.map((d, i) => {
+    const p = byKit[d.kit];
+    const repo = repos[String(d.kit)];
+    return (
+      <div class="tg__panel" role="tabpanel" id={`tg-panel-${d.id}`} aria-labelledby={`tg-tab-${d.id}`} data-tg-panel={d.id} hidden={i !== 0}>
+        <div class="tg__stage" data-tg-stage>
+          <div class="tg__poster" data-tg-poster>
+            <span class="tg__poster-kit d" aria-hidden="true">{d.kit}</span>
+            <p class="tg__poster-name d">{d.name}</p>
+            <button type="button" class="btn btn--gold tg__start" data-tg-start>{t.start} ▶</button>
+          </div>
+        </div>
+
+        <aside class="tg__side">
+          <p class="tg__tag m">#{d.kit} · {p.short.toUpperCase()}</p>
+          <h3 class="tg__name d">{d.name}</h3>
+
+          <div class="tg__controls" data-tg-controls>
+            {d.id === 'splat' && (
+              <>
+                <form class="tg__query" data-ctl="query-form">
+                  <label class="sr-only" for="tg-q">Ask the scene</label>
+                  <input id="tg-q" type="text" placeholder="Ask the scene… e.g. something to drink from" autocomplete="off" data-ctl="query" />
+                  <button type="submit" class="tg__btn tg__btn--gold">Find</button>
+                </form>
+                <div class="tg__chips">
+                  {['red mug', 'something to drink from', 'the plant', 'gold box', 'where do I put the banana?'].map((q) => (
+                    <button type="button" class="tg__chip" data-q={q}>{q}</button>
+                  ))}
+                </div>
+                <div class="tg__row">
+                  <button type="button" class="tg__btn" data-ctl="train">Train from scratch</button>
+                  <button type="button" class="tg__btn" data-ctl="grasp">Send target to AR4</button>
+                </div>
+                <label class="tg__range"><span class="m">SPLAT BUDGET</span><input type="range" min="4000" max="30000" step="2000" value="20000" data-ctl="budget" /></label>
+                <div class="tg__row">
+                  <button type="button" class="tg__btn" data-ctl="fly">Fly-through</button>
+                </div>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="orbit" /> <span>Auto-orbit</span></label>
+                <label class="tg__check"><input type="checkbox" data-ctl="depth" /> <span>Depth view</span></label>
+                <label class="tg__check"><input type="checkbox" data-ctl="ellipses" /> <span>Debug view: show each Gaussian's footprint</span></label>
+              </>
+            )}
+            {d.id === 'tracker' && (
+              <>
+                <label class="tg__range"><span class="m">DECOY DRONES</span><input type="range" min="0" max="6" step="1" value="3" data-ctl="decoys" /></label>
+                <label class="tg__range"><span class="m">DETECTION NOISE</span><input type="range" min="0" max="30" step="1" value="10" data-ctl="noise" /></label>
+                <label class="tg__range"><span class="m">MISSED DETECTIONS</span><input type="range" min="0" max="80" step="5" value="25" data-ctl="miss" /></label>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="kalman" /> <span>Kalman filter</span></label>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="hungarian" /> <span>Hungarian matching (off = greedy)</span></label>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="ellipse" /> <span>Show uncertainty</span></label>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="predict" /> <span>Predicted path (1 s ahead)</span></label>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="trails" /> <span>Trails</span></label>
+                <div class="tg__row">
+                  <button type="button" class="tg__btn tg__btn--gold" data-ctl="cross">Run a crossing</button>
+                  <button type="button" class="tg__btn" data-ctl="blackout">Blackout 1 s</button>
+                </div>
+              </>
+            )}
+            {d.id === 'icp' && (
+              <>
+                <fieldset class="tg__seg">
+                  <legend class="m">SCENE</legend>
+                  <label><input type="radio" name="icp-scene" value="ball" checked data-ctl="scene" /><span>Ball (quasi-symmetric)</span></label>
+                  <label><input type="radio" name="icp-scene" value="mug" data-ctl="scene" /><span>Mug + box</span></label>
+                </fieldset>
+                <label class="tg__range"><span class="m">MIS-TILT <b data-out="tilt-in">28°</b></span><input type="range" min="0" max="40" step="1" value="28" data-ctl="tilt" /></label>
+                <label class="tg__range"><span class="m">SENSOR NOISE</span><input type="range" min="0" max="10" step="1" value="3" data-ctl="noise" /></label>
+                <div class="tg__row">
+                  <button type="button" class="tg__btn" data-ctl="icp">Align: unconstrained ICP</button>
+                  <button type="button" class="tg__btn tg__btn--gold" data-ctl="gravity">Align: gravity first</button>
+                  <button type="button" class="tg__btn" data-ctl="reset">Reset</button>
+                </div>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="residuals" /> <span>Colour points by residual</span></label>
+              </>
+            )}
+            {d.id === 'hpo' && (
+              <>
+                <fieldset class="tg__seg">
+                  <legend class="m">LANDSCAPE</legend>
+                  <label><input type="radio" name="hpo-land" value="smooth" data-ctl="land" /><span>Smooth</span></label>
+                  <label><input type="radio" name="hpo-land" value="multi" checked data-ctl="land" /><span>Multi-modal</span></label>
+                  <label><input type="radio" name="hpo-land" value="needle" data-ctl="land" /><span>Needle</span></label>
+                </fieldset>
+                <label class="tg__range"><span class="m">TRIALS PER SAMPLER <b data-out="trials-in">40</b></span><input type="range" min="10" max="80" step="5" value="40" data-ctl="trials" /></label>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="prune" /> <span>Median pruning</span></label>
+                <label class="tg__check"><input type="checkbox" checked data-ctl="deferred" /> <span>Deferred evaluation</span></label>
+                <div class="tg__row">
+                  <button type="button" class="tg__btn tg__btn--gold" data-ctl="run">Start the race</button>
+                </div>
+              </>
+            )}
+            {d.id === 'tcc' && (
+              <>
+                <fieldset class="tg__seg">
+                  <legend class="m">EMBEDDING SIZE D</legend>
+                  {[32, 64, 128].map((v) => (
+                    <label><input type="radio" name="tcc-d" value={v} checked={v === 64} data-ctl="dim" /><span>{v}</span></label>
+                  ))}
+                </fieldset>
+                <div class="tg__row">
+                  <button type="button" class="tg__btn" data-ctl="epoch">Train 1 epoch</button>
+                  <button type="button" class="tg__btn tg__btn--gold" data-ctl="train">Train to convergence</button>
+                  <button type="button" class="tg__btn" data-ctl="reset">Reset</button>
+                </div>
+                <label class="tg__range"><span class="m">CLIP B SPEED <b data-out="speed-in">1.6×</b></span><input type="range" min="1" max="2.5" step="0.1" value="1.6" data-ctl="speed" /></label>
+                <label class="tg__check"><input type="checkbox" data-ctl="shuffle" /> <span>Shuffle clip B's frames (it should still find the moments)</span></label>
+                <p class="tg__hint m">Click any frame in the top clip.</p>
+              </>
+            )}
+          </div>
+
+          <dl class="tg__readouts" aria-live="polite" data-tg-readouts></dl>
+
+          <details class="tg__notes" open>
+            <summary class="m">{t.see}</summary>
+            <p>{d.see}</p>
+          </details>
+          <details class="tg__notes">
+            <summary class="m">{t.trap}</summary>
+            <p>{d.trap}</p>
+          </details>
+          <div class="tg__real">
+            <p class="m">{t.real}</p>
+            <p>{d.real}</p>
+          </div>
+          <p class="tg__fine">{d.fineprint}</p>
+          <div class="tg__links">
+            <a href={`#report-${d.kit}`} class="tg__link">{t.report} →</a>
+            {repo?.url && <a href={repo.url} class="tg__link" target="_blank" rel="noopener">{t.code} ↗</a>}
+          </div>
+        </aside>
+      </div>
+    );
+  })}
+</section>
+
+<style>
+  .tg { position: relative; padding-top: clamp(72px, 9cqi, 140px); padding-bottom: clamp(72px, 9cqi, 140px); }
+  .tg__honesty { margin: 18px 0 0; font-size: 11px; letter-spacing: .1em; color: var(--muted); max-width: 760px; line-height: 1.6; }
+
+  .tg__tabs { margin-top: 36px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .tg__tab {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; text-align: left; cursor: pointer;
+    border: 1px solid rgba(246, 243, 236, .12); background: var(--stand); color: var(--floodlight); font: inherit;
+    transition: border-color var(--dur-fast), background-color var(--dur-fast), transform var(--dur-fast);
+  }
+  .tg__tab:hover { border-color: var(--trophy); transform: translateY(-2px); }
+  .tg__tab[aria-selected='true'] { background: var(--trophy); color: var(--on-trophy); border-color: var(--trophy); }
+  .tg__tab-kit { font-weight: 900; font-size: 40px; line-height: 1; min-width: 1.2em; }
+  .tg__tab-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .tg__tab-name { font-weight: 800; font-size: 20px; line-height: 1; }
+  .tg__tab-tag { font-size: 9px; letter-spacing: .1em; opacity: .75; }
+  @container (max-width: 980px) {
+    .tg__tabs { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+    .tg__tab { flex: 0 0 auto; scroll-snap-align: start; }
+    .tg__tab-tag { display: none; }
+  }
+
+  .tg__panel { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 18px; align-items: start; }
+  @container (max-width: 980px) { .tg__panel { grid-template-columns: 1fr; } }
+  .tg__stage {
+    position: relative; aspect-ratio: 16 / 10; border-radius: var(--r-panel); overflow: hidden; overflow: clip;
+    background: radial-gradient(circle, rgba(245, 197, 66, .18) 1.2px, transparent 1.8px), var(--tunnel); background-size: 8px 8px;
+    box-shadow: 0 0 0 1px rgba(246, 243, 236, .08); touch-action: none;
+  }
+  @container (max-width: 640px) { .tg__stage { aspect-ratio: 4 / 5; } }
+  .tg__stage :global(canvas) { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .tg__poster { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; z-index: 2; background: rgba(8, 8, 11, .55); }
+  .tg__poster-kit { font-weight: 900; font-size: 120px; line-height: .8; color: transparent; -webkit-text-stroke: 2px var(--trophy); }
+  .tg__poster-name { margin: 0; font-weight: 900; font-size: 44px; line-height: 1; }
+
+  .tg__side { display: flex; flex-direction: column; gap: 14px; }
+  .tg__tag { margin: 0; font-size: 11px; letter-spacing: .14em; color: var(--red-card); font-weight: 700; }
+  .tg__name { margin: -6px 0 0; font-weight: 900; font-size: 44px; line-height: .9; }
+  .tg__controls { display: flex; flex-direction: column; gap: 12px; }
+  .tg__row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tg__btn {
+    min-height: 40px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--control); background: transparent;
+    color: var(--floodlight); font: 600 13px var(--font-body); cursor: pointer; transition: border-color .2s, color .2s, background-color .2s;
+  }
+  .tg__btn:hover { border-color: var(--trophy); color: var(--trophy); }
+  .tg__btn--gold { background: var(--trophy); border-color: var(--trophy); color: var(--on-trophy); }
+  .tg__btn--gold:hover { background: var(--floodlight); color: var(--on-trophy); }
+  .tg__btn:disabled { opacity: .45; cursor: progress; }
+  .tg__query { display: flex; gap: 8px; }
+  .tg__query input {
+    flex: 1; min-width: 0; min-height: 44px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--control);
+    background: var(--night); color: var(--floodlight); font: 14px var(--font-body);
+  }
+  .tg__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tg__chip {
+    min-height: 32px; padding: 0 10px; border-radius: var(--r-pill); border: 1px solid rgba(245, 197, 66, .6); background: transparent;
+    color: var(--trophy); font: 600 12px var(--font-body); cursor: pointer;
+  }
+  .tg__chip:hover { background: var(--trophy); color: var(--on-trophy); }
+  .tg__range { display: flex; flex-direction: column; gap: 6px; }
+  .tg__range .m { font-size: 10px; letter-spacing: .14em; color: var(--muted); }
+  .tg__range b { color: var(--trophy); }
+  .tg__range input { accent-color: var(--trophy); width: 100%; }
+  .tg__check { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+  .tg__check input { accent-color: var(--trophy); width: 18px; height: 18px; }
+  .tg__seg { margin: 0; padding: 0; border: 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tg__seg legend { font-size: 10px; letter-spacing: .14em; color: var(--muted); margin-bottom: 6px; padding: 0; width: 100%; }
+  .tg__seg label { position: relative; }
+  .tg__seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .tg__seg span { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--trophy); color: var(--trophy); font: 700 13px var(--font-mono); }
+  .tg__seg input:checked + span { background: var(--trophy); color: var(--on-trophy); }
+  .tg__seg input:focus-visible + span { outline: 2px solid var(--trophy); outline-offset: 3px; }
+  .tg__hint { margin: 0; font-size: 11px; letter-spacing: .1em; color: var(--muted); }
+
+  .tg__readouts { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .tg__readouts:empty { display: none; }
+  .tg__readouts :global(div) { padding: 10px 12px; border-radius: 12px; background: var(--stand); display: flex; flex-direction: column-reverse; gap: 4px; }
+  .tg__readouts :global(dt) { font: 9px var(--font-mono); letter-spacing: .12em; color: var(--muted); text-transform: uppercase; }
+  .tg__readouts :global(dd) { margin: 0; font: 700 16px var(--font-mono); color: var(--trophy); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tg__readouts :global(dd.is-bad) { color: var(--red-card); }
+
+  .tg__notes { border-top: 1px solid rgba(246, 243, 236, .1); padding-top: 10px; }
+  .tg__notes summary { font-size: 10px; letter-spacing: .14em; color: var(--muted); cursor: pointer; list-style: none; }
+  .tg__notes summary::-webkit-details-marker { display: none; }
+  .tg__notes summary::after { content: ' +'; color: var(--trophy); }
+  .tg__notes[open] summary::after { content: ' –'; }
+  .tg__notes p { margin: 8px 0 0; font-size: 14px; line-height: 1.55; color: var(--floodlight); }
+  .tg__real { padding: 12px 14px; border-radius: 14px; background: rgba(245, 197, 66, .08); border: 1px solid rgba(245, 197, 66, .35); }
+  .tg__real .m { margin: 0; font-size: 10px; letter-spacing: .14em; color: var(--trophy); }
+  .tg__real p:last-child { margin: 6px 0 0; font-size: 14px; line-height: 1.5; }
+  .tg__fine { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+  .tg__links { display: flex; flex-wrap: wrap; gap: 14px; }
+  .tg__link { font-weight: 600; font-size: 14px; color: var(--trophy); }
+</style>

@@ -14,6 +14,10 @@
       "label": "POWER-UPS"
     },
     {
+      "href": "#training",
+      "label": "TRAINING"
+    },
+    {
       "href": "#fanzone",
       "label": "FAN ZONE"
     },
@@ -315,5 +319,72 @@
     "mailSign": "Sent from the transfer window on your portfolio.",
     "status": "Bid ready. Your email app is opening with it.",
     "back": "← Back to the penalty"
+  },
+  "training": {
+    "_note": "Training Ground, added on Ayush's request (2026-10-04). Live in-browser drills of his top five projects. Every number quoted as a real result comes from content.json; numbers computed inside a drill are labelled as live toy values.",
+    "bugTime": "43'",
+    "bug": "TRAINING GROUND · LIVE DRILLS",
+    "titleA": "Training",
+    "titleB": "ground",
+    "intro": "Five drills, five real algorithms, running live in your browser. Break them. That's how I found out where they fail.",
+    "honesty": "Toy scenes, real maths. The drill numbers are live simulation values; my actual results sit under each drill and in the match reports.",
+    "start": "Start drill",
+    "see": "WHAT YOU'RE SEEING",
+    "trap": "THE TRAP I CAUGHT",
+    "real": "THE REAL RESULT",
+    "report": "Full match report",
+    "code": "View the code",
+    "drills": [
+      {
+        "id": "splat",
+        "kit": 7,
+        "name": "Splat Lab",
+        "tag": "3D GAUSSIAN SPLATTING · OPEN-VOCAB",
+        "see": "A lab scene built from thousands of 3D Gaussians, rendered live with the same projection maths as the paper. Drag to orbit, hit Train to watch it sharpen, then ask it for something in plain words.",
+        "trap": "Mixed video and still captures broke the camera model: 14 dB. Per-folder COLMAP camera modes took the same images to 29 dB.",
+        "real": "29.60 dB PSNR · 0.952 SSIM · 621/621 frames registered · 9/10 correct 3D localizations",
+        "fineprint": "The text box here is a small keyword matcher standing in for CLIP. The real system distils CLIP ViT-B/32 features into the Gaussians."
+      },
+      {
+        "id": "tracker",
+        "kit": 19,
+        "name": "Tracker",
+        "tag": "KALMAN FILTER · HUNGARIAN MATCHING",
+        "see": "You're the drone: move your cursor (or finger) over the sky. Everything else is decoys, noisy detections and a tracker that refuses to lose you.",
+        "trap": "Raw detections jitter and drop out. An 8-state Kalman filter keeps a track alive through missed frames, and Hungarian matching stops IDs swapping when drones cross. Turn either off and watch.",
+        "real": "Fine-tuned YOLOv8n on 3,000+ drone images · custom 8-state Kalman tracker [cx, cy, w, h, vx, vy, vw, vh] · Hungarian assignment",
+        "fineprint": "Detections here are simulated around the true positions with the noise and dropout you set."
+      },
+      {
+        "id": "icp",
+        "kit": 10,
+        "name": "VAR Alignment",
+        "tag": "POINT-CLOUD REGISTRATION",
+        "see": "The same scene twice: the robot's view (white) and the splat's (gold), tilted, scaled and shifted. Hit Align and watch the solver work, one iteration at a time.",
+        "trap": "Unconstrained 7-DOF ICP can settle on a 28° mis-tilt and report a tidy 5.8 mm RMSE. Low RMSE alone cannot validate registration. Gravity first: level the table, then solve yaw, scale and translation with a 12-seed yaw sweep.",
+        "real": "0.46 mm on synthetic ground truth · caught a 28° mis-tilt hiding behind a 5.8 mm RMSE · code-reviewed and merged to aegean-ai/ar4-physical-ai",
+        "fineprint": "Real ICP (Horn's closed form, nearest neighbours) on a toy ball-on-a-table scene. RMSE is in scene units; the true tilt error is known because I built the scene."
+      },
+      {
+        "id": "hpo",
+        "kit": 1,
+        "name": "HPO Arena",
+        "tag": "HYPERPARAMETER OPTIMISATION",
+        "see": "A toy hyperparameter landscape and three samplers racing to the peak. Weak trials get pruned halfway, the way they deserve.",
+        "trap": "Evaluating every trial in full was the slow part. Deferring evaluation cut each trial from 30 minutes to 8.",
+        "real": "4-stage Optuna HPO pipeline (training, RPN anchors, RoI sampling, inference) · 30 → 8 min per trial · +5% tuned mAP on VisDrone",
+        "fineprint": "The landscape is synthetic. The GPU clock uses the real 30 and 8 minute trial costs."
+      },
+      {
+        "id": "tcc",
+        "kit": 4,
+        "name": "Cycle Check",
+        "tag": "SELF-SUPERVISED VIDEO · TCC",
+        "see": "Two clips of the same kick, filmed at different speeds. Pick a frame in the top clip and watch it cycle to the other clip and back.",
+        "trap": "No labels anywhere: if A → B → A lands where it started, the embedding has learned timing. If it doesn't, the loss says so. Train it and watch the diagonal appear.",
+        "real": "TCC loss and temporal segmentation from scratch · embedding size swept over D = {32, 64, 128} · best alignment 0.589 at D = 128",
+        "fineprint": "Toy embeddings: true phase features projected to D dimensions plus noise that training shrinks."
+      }
+    ]
   }
 }

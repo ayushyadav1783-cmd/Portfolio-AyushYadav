@@ -260,6 +260,18 @@ The toggle sits in the broadcast bar ("Crowd: off"). Sounds: a low crowd bed, fl
 | Spring grid | The pointer pushes neighbor cards away (max 6px, inverse distance), and they settle with damping | pointermove |
 | Title | "POWER-UPS" letters jitter once on enter like an anime power-up flash: a 2-frame white flash and a ±4px shake | enter |
 
+### 5.4b Training Ground (live drills). Added on Ayush's request, 2026-10-04
+
+Between Power-ups and the Fan Zone (clock 43'). Five tabs, one per top project, each a real algorithm running live in the browser on a toy scene. Each drill's code loads only when started; drills pause off screen. Copy: copy.json → training. Every quoted result is from content.json; numbers a drill computes are labelled as live toy values.
+
+| Drill | Project | Live features |
+|---|---|---|
+| Splat Lab | #7 + #11 | OGL/WebGL2 3DGS rasteriser (EWA 2D covariance, front-to-back sort), ~30k Gaussians; orbit, training replay to 30K steps, open-vocab query (toy keyword matcher standing in for CLIP) → highlight + XYZ target → AR4 grasp; splat budget, depth view, footprint debug, fly-through, auto-orbit |
+| Tracker | #19 | 8-state Kalman + Hungarian/greedy on simulated detections; cursor/finger is the drone; decoys, noise, dropout, blackout, crossing scenario; uncertainty, predicted path, trails; live tracks / ID switches / error |
+| VAR Alignment | #10 | Real ICP (Horn similarity) vs gravity-first (RANSAC table plane → 12-seed yaw sweep → yaw/scale/translation); quasi-symmetric ball (trap) vs mug scene; tilt + noise; residual colouring; RMSE vs true tilt error |
+| HPO Arena | #1 | Random vs grid vs TPE-style (l/g density ratio) race on smooth / multi-modal / needle landscapes; median pruning, learning curves, GPU clock with the real 30 → 8 min trial costs |
+| Cycle Check | #4 | Soft-NN cycle consistency A→B→A on two clips of a kick; D = 32/64/128, train, clip speed, shuffle; similarity matrix, 2D PCA of embeddings, cycle-back accuracy |
+
 ### 5.5 Fan Zone (Interests)
 
 **Layout:** a full-bleed **red** section with a dark halftone dot overlay, black text. The title "FAN ZONE" plus a line of copy. Two crossing ticker bands: a black band with gold text (rotated −4°) and a cream band with black text (rotated +3°, opposite direction). Then a cluster of 8 rotated typographic **stickers** (thick black border, hard offset shadow, mixed shapes: pill, rounded, sharp). Hint text below.
