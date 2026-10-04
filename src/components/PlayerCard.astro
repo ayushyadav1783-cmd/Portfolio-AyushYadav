@@ -1,48 +1,50 @@
 ---
 import type { Project } from '../content';
+import { art } from '../content/art';
 
 interface Props {
   project: Project;
 }
 const { project: p } = Astro.props;
-
-// Halftone placeholder per position (dot colour, dot pitch), from the desktop board.
-// TODO(asset): replace with the real project visual named in content.json → projects[].asset.
-const art: Record<string, [string, number]> = {
-  ST: ['rgba(245,197,66,.55)', 7],
-  LW: ['rgba(246,243,236,.4)', 6],
-  RW: ['rgba(255,74,61,.6)', 7],
-  CAM: ['rgba(245,197,66,.45)', 5],
-  CM: ['rgba(246,243,236,.35)', 8],
-  CB: ['rgba(255,74,61,.45)', 6],
-  GK: ['rgba(245,197,66,.4)', 9],
-};
 const [dot, pitch] = art[p.pos];
 ---
 
 <a
   href={`#report-${p.kit}`}
   class="pcard"
+  data-card
   data-kit={p.kit}
   data-pos={p.pos}
   aria-label={`Open match report: ${p.title}`}
 >
-  <span class="pcard__art" style={`--dot:${dot};--pitch:${pitch}px`}>
-    <span class="pcard__kit d">{p.kit}</span>
-    <span class="pcard__pos m">{p.pos} · {p.nickname.toUpperCase()}</span>
-    <span class="pcard__club m">{p.club.toUpperCase()}</span>
-    <span class="pcard__note m">[ASSET] {p.asset.toUpperCase()}</span>
-  </span>
-  <span class="pcard__body">
-    <span class="pcard__title d">{p.short}</span>
-    <span class="pcard__role">{p.role}</span>
-    <span class="pcard__attrs">
-      {p.attrs.map(([v, k]) => (
-        <span class="pcard__attr">
-          <span class="pcard__v m">{v}</span>
-          <span class="pcard__k m">{k}</span>
+  <span class="pcard__inner" data-card-inner>
+    <span class="pcard__face pcard__front">
+      <span class="pcard__art" style={`--dot:${dot};--pitch:${pitch}px`}>
+        <span class="pcard__kit d">{p.kit}</span>
+        <span class="pcard__pos m">{p.pos} · {p.nickname.toUpperCase()}</span>
+        <span class="pcard__club m">{p.club.toUpperCase()}</span>
+        <span class="pcard__note m">[ASSET] {p.asset.toUpperCase()}</span>
+      </span>
+      <span class="pcard__body">
+        <span class="pcard__title d">{p.short}</span>
+        <span class="pcard__role">{p.role}</span>
+        <span class="pcard__attrs">
+          {p.attrs.map(([v, k]) => (
+            <span class="pcard__attr">
+              <span class="pcard__v m">{v}</span>
+              <span class="pcard__k m">{k}</span>
+            </span>
+          ))}
         </span>
-      ))}
+      </span>
+      <span class="pcard__glare" aria-hidden="true"></span>
+    </span>
+    <!-- Back face: gold match-report teaser shown mid-flip (board 06). -->
+    <span class="pcard__face pcard__back" aria-hidden="true">
+      <span class="pcard__back-kicker m">MATCH REPORT · #{p.kit}</span>
+      <span class="pcard__back-title d">What happened out there</span>
+      <span class="pcard__back-text">{p.role}</span>
+      <span class="pcard__back-cta">Read full report →</span>
     </span>
   </span>
 </a>
@@ -50,15 +52,39 @@ const [dot, pitch] = art[p.pos];
 <style>
   .pcard {
     position: relative; display: block; width: 100%; border-radius: var(--r-card);
-    background: var(--stand); color: var(--floodlight); text-decoration: none; overflow: hidden;
+    color: var(--floodlight); text-decoration: none;
     box-shadow: 0 14px 34px rgba(0, 0, 0, .5), 0 0 0 1px rgba(246, 243, 236, .1);
-    transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s;
+    transition: box-shadow .35s, opacity .35s;
   }
-  .pcard:hover, .pcard:focus-visible {
+  .pcard:hover, .pcard:focus-visible, .pcard.is-active {
     color: var(--floodlight);
-    transform: perspective(900px) rotateX(6deg) rotateY(-8deg) translateY(-8px);
     box-shadow: 0 30px 60px rgba(0, 0, 0, .6), 0 0 0 1px var(--trophy), 0 0 40px rgba(245, 197, 66, .25);
   }
+  /* Without JS (or before it loads) the board's static hover tilt applies. */
+  :global(html:not(.js)) .pcard { transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s; }
+  :global(html:not(.js)) .pcard:hover { transform: perspective(900px) rotateX(6deg) rotateY(-8deg) translateY(-8px); }
+  .pcard:focus-visible { outline-offset: 4px; }
+
+  .pcard__inner { position: relative; display: block; transform-style: preserve-3d; }
+  .pcard__face { display: block; border-radius: var(--r-card); overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .pcard__front { position: relative; background: var(--stand); }
+  .pcard__back {
+    position: absolute; inset: 0; transform: rotateY(180deg);
+    display: flex; flex-direction: column; gap: 10px; padding: 20px;
+    background: var(--trophy); color: var(--on-trophy);
+  }
+  .pcard__back-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+  .pcard__back-title { font-weight: 900; font-size: 30px; line-height: .95; }
+  .pcard__back-text { font-size: 14px; line-height: 20px; }
+  .pcard__back-cta { margin-top: auto; font-weight: 700; font-size: 13px; }
+
+  .pcard__glare {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, .22) 45%, rgba(255, 255, 255, 0) 60%);
+    background-size: 250% 100%; background-position: var(--gx, 50%) 0;
+  }
+  .pcard.is-active .pcard__glare { opacity: 1; }
+
   .pcard__art {
     position: relative; display: block; height: 150px;
     background: radial-gradient(circle, var(--dot) 1.2px, transparent 1.8px), var(--tunnel);
@@ -81,8 +107,4 @@ const [dot, pitch] = art[p.pos];
   .pcard__attr { display: flex; flex-direction: column; gap: 2px; }
   .pcard__v { font-size: 15px; font-weight: 700; color: var(--trophy); white-space: nowrap; }
   .pcard__k { font-size: 9px; letter-spacing: .12em; color: var(--muted); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .pcard:hover, .pcard:focus-visible { transform: none; }
-  }
 </style>

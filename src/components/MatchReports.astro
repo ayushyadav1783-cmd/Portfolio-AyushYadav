@@ -1,0 +1,138 @@
+---
+// Full match reports (spec §5.3). All seven render as real HTML; JS shows one at a time
+// in a dialog at #report-N. Text comes verbatim from content.json → projects.
+import { formation } from '../content';
+import { art } from '../content/art';
+
+const order = formation.flat(); // reading order on the pitch: LW, ST, RW, CAM, CM, CB, GK
+---
+
+<dialog class="report" aria-label="Match report" data-report data-lenis-prevent>
+  <div class="report__panel" data-report-panel>
+    <span class="report__curtain" aria-hidden="true" data-report-curtain></span>
+    <button type="button" class="report__close" aria-label="Close match report" data-report-close>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
+    </button>
+    <div class="report__scroll" data-report-scroll>
+    {order.map((p, i) => {
+      const [dot, pitch] = art[p.pos];
+      const prev = order[(i + order.length - 1) % order.length];
+      const next = order[(i + 1) % order.length];
+      return (
+        <article class="report__article" data-report-kit={p.kit} aria-labelledby={`report-h-${p.kit}`} hidden>
+          <div class="report__art" style={`--dot:${dot};--pitch:${pitch + 3}px`}>
+            <span class="report__kit d">{p.kit}</span>
+            <span class="report__pos m">{p.pos} · {p.nickname.toUpperCase()}</span>
+            <span class="report__asset m">[ASSET] {p.asset.toUpperCase()}</span>
+          </div>
+
+          <div class="report__info">
+            <p class="report__kicker m">MATCH REPORT · #{p.kit} · {p.pos}</p>
+            <h2 id={`report-h-${p.kit}`} class="report__title d">{p.title}</h2>
+            <p class="report__meta m">{p.club.toUpperCase()} · {p.date}</p>
+            <p class="report__summary">{p.role}</p>
+
+            <dl class="report__stats">
+              {p.stats.map(([v, k]) => (
+                <div class="report__stat">
+                  <dt class="m">{k}</dt>
+                  <dd class="m" data-countup>{v}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <h3 class="report__h3 d">What happened out there</h3>
+            <ul class="report__list">
+              {p.report.map((line) => <li>{line}</li>)}
+            </ul>
+            {'note' in p && p.note && <p class="report__note m">✓ {p.note}</p>}
+
+            <ul class="report__stack" aria-label="Stack">
+              {p.stack.map((s) => <li class="m">{s}</li>)}
+            </ul>
+
+            <nav class="report__nav" aria-label="Other players">
+              <button type="button" class="report__go" data-report-go={prev.kit}>
+                <span class="m">← #{prev.kit} {prev.pos}</span><span>{prev.short}</span>
+              </button>
+              <button type="button" class="report__go report__go--next" data-report-go={next.kit}>
+                <span class="m">#{next.kit} {next.pos} →</span><span>{next.short}</span>
+              </button>
+            </nav>
+          </div>
+        </article>
+      );
+    })}
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .report {
+    width: min(1200px, calc(100vw - 32px)); max-width: none; height: calc(100dvh - 32px); max-height: none;
+    margin: auto; padding: 0; border: 0; background: transparent; color: var(--floodlight); overflow: visible;
+  }
+  .report::backdrop { background: rgba(8, 8, 11, .9); backdrop-filter: blur(8px); }
+  .report__panel {
+    position: relative; height: 100%; overflow: hidden;
+    border-radius: var(--r-panel); background: var(--stand);
+    box-shadow: 0 0 0 1px rgba(245, 197, 66, .4), 0 40px 100px rgba(0, 0, 0, .6);
+  }
+  .report__curtain { position: absolute; inset: 0; z-index: 3; background: var(--trophy); opacity: 0; pointer-events: none; border-radius: inherit; }
+  .report__scroll { height: 100%; overflow-y: auto; overscroll-behavior: contain; }
+  .report__close {
+    position: absolute; top: 16px; right: 16px; z-index: 4;
+    width: 48px; height: 48px; border-radius: var(--r-pill); border: 1px solid var(--control);
+    background: rgba(18, 18, 24, .85); color: var(--floodlight); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .report__close:hover { border-color: var(--trophy); color: var(--trophy); }
+
+  .report__article { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); min-height: 100%; }
+  .report__article[hidden] { display: none; }
+  .report__art {
+    position: sticky; top: 0; height: calc(100dvh - 32px); min-height: 420px; overflow: hidden;
+    background: radial-gradient(circle, var(--dot) 1.6px, transparent 2.4px), var(--tunnel);
+    background-size: var(--pitch) var(--pitch);
+  }
+  .report__kit { position: absolute; left: 28px; top: 16px; font-weight: 900; font-size: clamp(120px, 14vw, 200px); line-height: 1; }
+  .report__pos { position: absolute; left: 32px; top: clamp(150px, 17vw, 230px); font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--trophy); }
+  .report__asset { position: absolute; left: 32px; right: 32px; bottom: 24px; font-size: 11px; letter-spacing: .1em; color: rgba(246, 243, 236, .55); }
+
+  .report__info { padding: clamp(28px, 4vw, 56px); padding-top: 72px; }
+  .report__kicker { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--red-card); }
+  .report__title { margin: 12px 0 0; font-weight: 900; font-size: clamp(40px, 4.6vw, 64px); line-height: .92; }
+  .report__meta { margin: 14px 0 0; font-size: 12px; letter-spacing: .12em; color: var(--muted); }
+  .report__summary { margin: 20px 0 0; font-size: clamp(18px, 1.6vw, 21px); line-height: 1.5; font-weight: 500; }
+
+  .report__stats { margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .report__stat { padding: 16px; border-radius: 16px; background: var(--tunnel); display: flex; flex-direction: column-reverse; gap: 6px; }
+  .report__stat dd { margin: 0; font-size: 24px; font-weight: 700; color: var(--trophy); font-variant-numeric: tabular-nums; }
+  .report__stat dt { font-size: 10px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; }
+
+  .report__h3 { margin: 36px 0 0; font-weight: 800; font-size: 30px; line-height: 1; }
+  .report__list { margin: 16px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .report__list li { position: relative; padding-left: 22px; font-size: 16px; line-height: 1.6; color: var(--muted); }
+  .report__list li::before { content: ''; position: absolute; left: 0; top: .7em; width: 10px; height: 2px; background: var(--trophy); }
+  .report__note { margin: 18px 0 0; font-size: 12px; letter-spacing: .08em; color: var(--trophy); }
+  .report__stack { margin: 24px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+  .report__stack li { padding: 8px 14px; border-radius: var(--r-pill); background: var(--tunnel); font-size: 13px; }
+
+  .report__nav { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(246, 243, 236, .1); display: flex; justify-content: space-between; gap: 12px; }
+  .report__go {
+    display: flex; flex-direction: column; gap: 4px; min-height: 56px; padding: 10px 16px; border-radius: 16px;
+    border: 1px solid var(--control); background: transparent; color: var(--floodlight); cursor: pointer; text-align: left;
+    font: 600 15px var(--font-body); transition: border-color var(--dur-fast), color var(--dur-fast);
+  }
+  .report__go .m { font-size: 11px; letter-spacing: .12em; color: var(--muted); font-weight: 400; }
+  .report__go--next { text-align: right; align-items: flex-end; }
+  .report__go:hover { border-color: var(--trophy); color: var(--trophy); }
+
+  @media (max-width: 760px) {
+    .report__article { grid-template-columns: 1fr; }
+    .report__art { position: relative; height: 240px; min-height: 0; }
+    .report__kit { font-size: 120px; }
+    .report__pos { top: 140px; }
+    .report__info { padding-top: 28px; }
+  }
+</style>
