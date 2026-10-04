@@ -1,0 +1,72 @@
+---
+import type { PowerUp } from '../content';
+
+interface Props {
+  powerup: PowerUp;
+}
+const { powerup: u } = Astro.props;
+
+// Type colour code (spec §5.4): gold = Vision/3D/Robotics, red = Perception/MLOps, floodlight = Deep learning.
+// Aura strengths match the desktop board.
+const family = u.type.startsWith('PERCEPTION') || u.type.startsWith('MLOPS')
+  ? 'red'
+  : u.type.startsWith('DEEP LEARNING') ? 'light' : 'gold';
+const aura = {
+  gold: `rgba(245,197,66,${u.level >= 3 ? .35 : .25})`,
+  red: `rgba(255,74,61,${u.type.startsWith('MLOPS') ? .25 : .3})`,
+  light: `rgba(246,243,236,${u.level >= 3 ? .22 : .18})`,
+}[family];
+---
+
+<article class:list={['pu', `pu--${family}`]} tabindex="0" data-level={u.level}>
+  <span class="pu__aura" style={`--aura:${aura}`} aria-hidden="true"></span>
+  <div class="pu__top">
+    <span class="pu__type m">{u.type}</span>
+    <span class="pu__by m">PLAYED BY {u.playedBy.map((n) => `#${n}`).join(' ')}</span>
+  </div>
+  <h3 class="pu__name d">{u.name}</h3>
+  <p class="pu__move"><span class="pu__label">Special move:</span> {u.move}</p>
+  <div class="pu__meter">
+    <div class="pu__meter-head m">
+      <span>POWER LEVEL</span><span class="pu__lvl">{u.level}/7</span>
+    </div>
+    <div class="pu__segs" aria-hidden="true">
+      {Array.from({ length: 7 }, (_, i) => <span class:list={{ on: i < u.level }}></span>)}
+    </div>
+  </div>
+</article>
+
+<style>
+  .pu {
+    position: relative; padding: 24px; border-radius: var(--r-card); background: var(--stand); overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(246, 243, 236, .08);
+    transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s;
+  }
+  .pu:hover, .pu:focus-visible {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 0 0 1px var(--trophy), 0 0 48px rgba(245, 197, 66, .35), 0 0 120px rgba(255, 74, 61, .18);
+  }
+  .pu__aura {
+    position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: var(--r-pill);
+    background: radial-gradient(circle, var(--aura), rgba(8, 8, 11, 0) 70%);
+  }
+  .pu__top { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .pu__type { font-size: 11px; letter-spacing: .14em; }
+  .pu--gold .pu__type { color: var(--trophy); }
+  .pu--red .pu__type { color: var(--red-card); }
+  .pu--light .pu__type { color: var(--floodlight); }
+  .pu__by { font-size: 11px; letter-spacing: .1em; color: var(--muted); }
+  .pu__name { position: relative; margin: 18px 0 0; font-weight: 800; font-size: 34px; line-height: .95; }
+  .pu__move { position: relative; margin: 10px 0 0; font-size: 15px; line-height: 22px; color: var(--muted); }
+  .pu__label { color: var(--floodlight); font-weight: 600; }
+  .pu__meter { position: relative; margin-top: 20px; }
+  .pu__meter-head { display: flex; justify-content: space-between; font-size: 10px; letter-spacing: .14em; color: var(--muted); }
+  .pu__lvl { font-size: 12px; font-weight: 700; letter-spacing: 0; color: var(--trophy); }
+  .pu__segs { margin-top: 8px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .pu__segs span { height: 8px; border-radius: 2px; background: #2a2a35; }
+  .pu__segs span.on { background: var(--trophy); box-shadow: 0 0 8px rgba(245, 197, 66, .6); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pu:hover, .pu:focus-visible { transform: none; }
+  }
+</style>

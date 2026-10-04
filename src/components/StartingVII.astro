@@ -1,0 +1,58 @@
+---
+import { copy, formation } from '../content';
+import Bug from './Bug.astro';
+import PlayerCard from './PlayerCard.astro';
+const x = copy.xi;
+---
+
+<section id="xi" class="xi" aria-labelledby="xi-h">
+  <div class="wrap">
+    <Bug time={x.bugTime} label={x.bug} />
+    <div class="section-head">
+      <h2 id="xi-h" class="title-xl d">Starting <span class="gold">VII</span></h2>
+      <p style="max-width: 420px">{x.intro}</p>
+    </div>
+  </div>
+
+  <div class="wrap pitch-wrap">
+    <div class="pitch">
+      <span class="pitch__line pitch__outline" aria-hidden="true"></span>
+      <span class="pitch__line pitch__half" aria-hidden="true"></span>
+      <span class="pitch__line pitch__circle" aria-hidden="true"></span>
+      <span class="pitch__line pitch__box pitch__box--top" aria-hidden="true"></span>
+      <span class="pitch__line pitch__box pitch__box--bottom" aria-hidden="true"></span>
+      <ol class="pitch__lines" aria-label="Formation 1-1-2-3, attackers first">
+        {formation.map((row) => (
+          <li class="pitch__row">
+            <ul>
+              {row.map((p) => <li><PlayerCard project={p} /></li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .xi { position: relative; padding: clamp(72px, 9cqi, 140px) 0; }
+  .pitch-wrap { position: relative; margin-top: 48px; }
+  .pitch {
+    position: relative; border-radius: var(--r-panel); overflow: hidden;
+    padding: clamp(28px, 4cqi, 64px) clamp(12px, 2cqi, 40px);
+    background-color: var(--pitch);
+    background-image: repeating-linear-gradient(0deg, rgba(246, 243, 236, .025) 0 80px, transparent 80px 160px);
+  }
+  .pitch__line { position: absolute; border: 2px solid var(--line); }
+  .pitch__outline { inset: 16px; border-radius: 18px; }
+  .pitch__half { left: 16px; right: 16px; top: 50%; height: 0; border-width: 2px 0 0; }
+  .pitch__circle { left: 50%; top: 50%; width: 200px; height: 200px; margin: -100px 0 0 -100px; border-radius: var(--r-pill); }
+  .pitch__box { left: 50%; width: min(44%, 420px); height: 110px; transform: translateX(-50%); }
+  .pitch__box--top { top: 16px; border-top: 0; }
+  .pitch__box--bottom { bottom: 16px; border-bottom: 0; }
+
+  .pitch__lines, .pitch__row ul { list-style: none; margin: 0; padding: 0; }
+  .pitch__lines { position: relative; display: flex; flex-direction: column; gap: clamp(24px, 3cqi, 44px); }
+  .pitch__row ul { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(16px, 2.4cqi, 36px); }
+  .pitch__row ul > li { width: min(100%, 256px); }
+</style>

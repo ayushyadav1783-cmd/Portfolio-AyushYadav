@@ -1,0 +1,29 @@
+---
+import { content, copy } from '../content';
+import Bug from './Bug.astro';
+import PowerUpCard from './PowerUpCard.astro';
+const pu = copy.powerups;
+---
+
+<section id="powerups" class="powerups wrap" aria-labelledby="pu-h">
+  <Bug time={pu.bugTime} label={pu.bug} />
+  <div class="section-head">
+    <h2 id="pu-h" class="title-xl d">Power<span class="red">-</span>ups</h2>
+    <p>{pu.intro}</p>
+  </div>
+  <div class="powerups__grid">
+    {content.powerups.map((u) => <PowerUpCard powerup={u} />)}
+  </div>
+  <div class="base">
+    <span class="base__label m">{pu.baseStatsLabel}</span>
+    {content.baseStats.map((s) => <span class="base__chip m">{s}</span>)}
+  </div>
+</section>
+
+<style>
+  .powerups { position: relative; padding-top: clamp(72px, 9cqi, 140px); padding-bottom: clamp(72px, 9cqi, 140px); }
+  .powerups__grid { margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+  .base { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .base__label { font-size: 11px; letter-spacing: .14em; color: var(--muted); margin-right: 6px; }
+  .base__chip { padding: 8px 14px; border-radius: var(--r-pill); background: var(--tunnel); font-size: 13px; }
+</style>

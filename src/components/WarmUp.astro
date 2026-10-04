@@ -1,0 +1,102 @@
+---
+import { Picture } from 'astro:assets';
+import portrait from '../../assets/portrait.png';
+import { copy } from '../content';
+import Bug from './Bug.astro';
+const w = copy.warmup;
+---
+
+<section id="warmup" class="warmup wrap" aria-labelledby="warmup-h">
+  <p class="warmup__bg d" aria-hidden="true">{w.bgWord}</p>
+  <Bug time={w.bugTime} label={w.bug} />
+  <div class="warmup__cols">
+    <div class="warmup__text">
+      <h2 id="warmup-h" class="warmup__h d">
+        {w.headlineA} <span class="gold">{w.headlineGold}</span> {w.headlineB}
+      </h2>
+      <p class="warmup__p">{w.p1}</p>
+      <p class="warmup__p muted">{w.p2}</p>
+      <div class="drills">
+        <p class="drills__title m">{w.drillsTitle}</p>
+        <ul>
+          {w.drills.map((d) => (
+            <li class:list={{ done: d.done }}>
+              <span class="drills__box d" aria-hidden="true">{d.done ? '✓' : ''}</span>
+              <span><span class="sr-only">{d.done ? 'Done: ' : 'To do: '}</span>{d.t}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <aside class="profile" aria-label="Player profile">
+      <div class="portrait">
+        <Picture
+          src={portrait}
+          alt={w.portraitAlt}
+          widths={[420, 640, 840]}
+          sizes="(min-width: 800px) 420px, 100vw"
+          formats={['avif', 'webp']}
+          fallbackFormat="jpg"
+          class="portrait__img"
+          loading="lazy"
+        />
+        <div class="portrait__dots" aria-hidden="true"></div>
+        <div class="portrait__fade" aria-hidden="true"></div>
+        <p class="portrait__seven d" aria-hidden="true">7</p>
+        <p class="portrait__hint m">{w.portraitHint}</p>
+      </div>
+      <dl class="profile__list">
+        {w.profile.map(([k, v]) => (
+          <>
+            <dt class="m">{k}</dt>
+            <dd>{v}</dd>
+          </>
+        ))}
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .warmup { position: relative; padding-top: clamp(96px, 11cqi, 168px); padding-bottom: clamp(72px, 9cqi, 140px); }
+  .warmup__bg {
+    position: absolute; left: clamp(16px, 3cqi, 40px); top: clamp(40px, 5cqi, 80px); margin: 0;
+    font-weight: 900; font-size: clamp(90px, 16cqi, 240px); line-height: .8;
+    color: transparent; -webkit-text-stroke: 1px rgba(246, 243, 236, .12); white-space: nowrap; pointer-events: none;
+  }
+  .warmup__cols { position: relative; margin-top: 28px; display: flex; flex-wrap: wrap; gap: clamp(32px, 5cqi, 80px); align-items: flex-start; }
+  .warmup__text { flex: 999 1 520px; min-width: 0; }
+  .warmup__h { margin: 0; font-weight: 800; font-size: clamp(48px, 6.2cqi, 92px); line-height: .9; }
+  .warmup__p { margin: 16px 0 0; font-size: clamp(17px, 1.5cqi, 20px); line-height: 1.6; max-width: 640px; }
+  .warmup__p:first-of-type { margin-top: 28px; }
+
+  .drills { margin-top: 36px; padding: 24px; border-radius: 20px; background: var(--stand); max-width: 640px; }
+  .drills__title { margin: 0 0 14px; font-size: 12px; letter-spacing: .14em; color: var(--muted); }
+  .drills ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .drills li { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 24px; color: var(--muted); }
+  .drills li.done { color: var(--floodlight); }
+  .drills__box {
+    flex: none; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px;
+    border: 2px solid var(--control); background: transparent; color: var(--on-trophy);
+    display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; line-height: 1;
+  }
+  .drills li.done .drills__box { border-color: var(--trophy); background: var(--trophy); }
+
+  .profile { flex: 1 1 340px; max-width: 420px; }
+  .portrait { position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 5; background: var(--stand); }
+  .portrait :global(.portrait__img) {
+    width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; display: block;
+    filter: grayscale(1) contrast(1.15);
+  }
+  .portrait__dots {
+    position: absolute; inset: 0; mix-blend-mode: multiply;
+    background-image: radial-gradient(circle, rgba(255, 74, 61, .55) 1.1px, transparent 1.7px); background-size: 6px 6px;
+  }
+  .portrait__fade { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; background: linear-gradient(0deg, rgba(8, 8, 11, .92), rgba(8, 8, 11, 0)); }
+  .portrait__seven { position: absolute; right: 18px; top: 6px; margin: 0; font-weight: 900; font-size: 120px; line-height: 1; color: var(--trophy); }
+  .portrait__hint { position: absolute; left: 20px; bottom: 18px; margin: 0; font-size: 11px; letter-spacing: .14em; color: var(--floodlight); }
+  .profile__list { margin: 20px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 10px 20px; font-size: 15px; line-height: 22px; }
+  .profile__list dt { font-size: 11px; line-height: 22px; letter-spacing: .14em; color: var(--muted); }
+  .profile__list dd { margin: 0; }
+</style>

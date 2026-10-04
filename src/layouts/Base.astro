@@ -1,0 +1,37 @@
+---
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import displayFont from '@fontsource/big-shoulders-display/files/big-shoulders-display-latin-900-normal.woff2?url';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Ayush Yadav — Computer Vision & Robotics Engineer',
+  description = 'Ayush Yadav, MS in AI at NJIT and AI Research Assistant at the Aegean AI Lab. Computer vision, 3D Gaussian Splatting and robotics. Open to new-grad roles from May 2027.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#08080b" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

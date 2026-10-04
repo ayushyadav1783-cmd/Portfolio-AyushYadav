@@ -16,3 +16,6 @@ dist/
 
 # logs
 npm-debug.log*
+
+# generated from assets/ by scripts/sync-assets.mjs
+public/resume.pdf

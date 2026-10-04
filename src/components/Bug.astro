@@ -1,0 +1,19 @@
+---
+// Zone label ("15' · WARM-UP"). Phase 2 turns these into the broadcast lower-thirds.
+interface Props {
+  time: string;
+  label: string;
+  variant?: 'default' | 'red' | 'dark';
+}
+const { time, label, variant = 'default' } = Astro.props;
+---
+
+<div class:list={['bug', 'm', `bug--${variant}`]}>
+  <span class="bug__time">{time}</span><span class="bug__label">{label}</span>
+</div>
+
+<style>
+  .bug--red .bug__time { background: var(--red-card); color: var(--on-red); }
+  .bug--dark .bug__time { background: var(--night); color: var(--floodlight); }
+  .bug--dark .bug__label { color: var(--night); font-weight: 700; }
+</style>

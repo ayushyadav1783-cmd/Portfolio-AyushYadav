@@ -1,0 +1,9 @@
+/* Self-hosted fonts (@fontsource), latin subset only, at the weights the boards use. */
+@import '@fontsource/big-shoulders-display/latin-800';
+@import '@fontsource/big-shoulders-display/latin-900';
+@import '@fontsource/instrument-sans/latin-400';
+@import '@fontsource/instrument-sans/latin-500';
+@import '@fontsource/instrument-sans/latin-600';
+@import '@fontsource/instrument-sans/latin-700';
+@import '@fontsource/jetbrains-mono/latin-400';
+@import '@fontsource/jetbrains-mono/latin-700';

@@ -1,0 +1,158 @@
+{
+  "person": {
+    "name": "Ayush Yadav",
+    "fullName": "Ayush Ramashankar Yadav",
+    "email": "ayushyadav1783@gmail.com",
+    "github": "https://github.com/ary22-gif",
+    "linkedin": "https://www.linkedin.com/in/ayush-yadav-87ab581a5",
+    "location": "Harrison, NJ",
+    "resume": "/resume.pdf",
+    "headline": "Computer Vision & Robotics Researcher",
+    "tagline": "I teach robots to see the world in 3D. Defenders mostly just see my back.",
+    "education": [
+      { "school": "New Jersey Institute of Technology (NJIT)", "place": "Newark, NJ", "degree": "M.S. in Artificial Intelligence", "gpa": "3.83/4.00", "dates": "2025 – 2027 (Expected)", "focus": "Computer Vision, Deep Learning, AI for Robotics, ML" },
+      { "school": "Ramrao Adik Institute of Technology (D.Y. Patil University)", "place": "India", "degree": "B.Tech. in Computer Engineering", "gpa": "CGPA 8.66/10.00", "dates": "2021 – 2025" }
+    ],
+    "experience": [
+      { "org": "Aegean AI Lab, NJIT", "place": "Newark, NJ", "role": "AI Research Assistant", "program": "Summer of Agents 2026 (competitive program, 3 positions)", "dates": "Jun 2026 – Present" }
+    ]
+  },
+  "projects": [
+    {
+      "kit": 7, "pos": "ST", "nickname": "The Finisher", "club": "Aegean AI Lab", "date": "Jun 2026 – Present",
+      "title": "Language-Grounded 3D Gaussian Splatting for Robotic Manipulation",
+      "short": "Language-Grounded 3DGS",
+      "role": "Text in, robot target out: CLIP-embedded splats driving a SmolVLA planner on an AR4 arm.",
+      "attrs": [["29.60", "PSNR dB"], [".952", "SSIM"], ["621/621", "FRAMES"]],
+      "stats": [["29.60 dB", "PSNR"], ["0.952", "SSIM"], ["0.078", "LPIPS"], ["621/621", "Frames at 0.96 px"], ["+2.1 dB", "Over baseline"]],
+      "report": [
+        "Building an end-to-end pipeline from natural-language query to robot action: text → CLIP-embedded 3DGS scene → 3D object localization → XYZ manipulation targets for a SmolVLA motion planner on a physical AR4 arm.",
+        "Achieved 29.60 dB PSNR / 0.952 SSIM / 0.078 LPIPS lab-scene reconstruction (621/621 gimbal-captured frames registered at 0.96 px), a +2.1 dB improvement over baseline, trained with gsplat MCMC on an NVIDIA RTX PRO 6000 Blackwell (96GB).",
+        "Two documented ablations: per-folder COLMAP camera mode for mixed video/still captures (14 dB → 29 dB on identical images), and Gaussian budget vs. training length (1M @ 30K steps outperforms 3M @ 100K).",
+        "Diagnosed a catastrophically broken scene scale (~5M units), traced it to sequential matching on unordered captures, and resolved it via exhaustive feature matching."
+      ],
+      "stack": ["gsplat", "COLMAP", "CLIP", "SmolVLA", "AR4", "PyTorch", "CUDA"],
+      "asset": "Splat fly-through loop"
+    },
+    {
+      "kit": 11, "pos": "LW", "nickname": "The Scout", "club": "Aegean AI Lab", "date": "Jun 2026 – Present",
+      "title": "Open-Vocabulary Semantic 3D Queries",
+      "short": "Open-Vocab 3D Queries",
+      "role": "Ask the scene for an object in plain words, get its 3D position back.",
+      "attrs": [["9/10", "FOUND"], ["4/5", "OPEN-VOCAB"], ["304", "KEYFRAMES"]],
+      "stats": [["9/10", "Correct 3D localizations"], ["4/5", "Open-vocabulary"], ["304", "Auto-captured keyframes"]],
+      "report": [
+        "Engineered CLIP ViT-B/32 feature distillation into trained Gaussians with a semantic query engine.",
+        "Achieved 9/10 correct 3D object localizations on real captures (4/5 open-vocabulary, beyond closed-set detectors).",
+        "Built a ROS2 + Gazebo autonomous capture pipeline (304 keyframes) feeding sim-side training data collection."
+      ],
+      "stack": ["CLIP ViT-B/32", "3DGS", "ROS2", "Gazebo", "PyTorch"],
+      "asset": "Query heatmap on splat"
+    },
+    {
+      "kit": 19, "pos": "RW", "nickname": "The Speedster", "club": "Project", "date": "Mar 2026",
+      "title": "UAV Drone Detection & Multi-Object Tracking",
+      "short": "UAV Detection + MOT",
+      "role": "Fine-tuned YOLOv8n and an 8-state Kalman tracker for drones in flight.",
+      "attrs": [["3,000+", "IMAGES"], ["8", "KF STATES"], ["HUNG.", "MATCHING"]],
+      "stats": [["3,000+", "Drone images"], ["8-state", "Kalman tracker"]],
+      "report": [
+        "Fine-tuned YOLOv8n on 3,000+ drone images.",
+        "Built a custom 8-state Kalman tracker [cx, cy, w, h, vx, vy, vw, vh] with Hungarian-algorithm assignment.",
+        "Built a full annotation pipeline overlaying tracks, predictions and trajectory polylines."
+      ],
+      "stack": ["YOLOv8", "Kalman filter", "Hungarian algorithm", "OpenCV"],
+      "asset": "Tracks + trajectory GIF"
+    },
+    {
+      "kit": 10, "pos": "CAM", "nickname": "The Playmaker", "club": "Aegean AI Lab", "date": "Jun 2026 – Present",
+      "title": "Sim-to-Real Geometric Alignment",
+      "short": "Sim-to-Real Alignment",
+      "role": "Puts the splat in the robot's frame. Caught ICP faking a clean result. Merged.",
+      "attrs": [["0.46mm", "SYNTH GT"], ["28°", "TILT CAUGHT"], ["12", "YAW SEEDS"]],
+      "stats": [["0.46 mm", "On synthetic GT"], ["28°", "Hidden mis-tilt found"], ["5.8 mm", "RMSE that hid it"], ["12", "Yaw seeds in sweep"]],
+      "report": [
+        "Built and validated a Umeyama similarity-transform engine (sub-mm synthetic accuracy) and a scale-aware robust ICP engine with FPFH+RANSAC global initialization (0.46 mm on synthetic ground truth) for 3DGS-to-robot-frame registration.",
+        "Found that unconstrained 7-DOF ICP silently converges to a 28° mis-tilt (5.8 mm RMSE) on quasi-symmetric geometry.",
+        "Designed a gravity-constrained pipeline (table-plane leveling, closed-form yaw/scale/translation, 12-seed yaw sweep), proving low RMSE alone cannot validate registration."
+      ],
+      "note": "Code-reviewed and merged to aegean-ai/ar4-physical-ai",
+      "stack": ["Umeyama", "ICP", "FPFH+RANSAC", "Python"],
+      "asset": "Before/after registration overlay"
+    },
+    {
+      "kit": 8, "pos": "CM", "nickname": "Box-to-Box", "club": "Project", "date": "Mar 2026",
+      "title": "Robotics Semantic Perception Pipeline",
+      "short": "Semantic Perception",
+      "role": "TurtleBot3 to ROS2 to YOLOv8 to Zenoh to Postgres. Sensor to database, end to end.",
+      "attrs": [["500+", "EVENTS"], ["512", "EMB DIMS"], ["AGE", "GRAPH"]],
+      "stats": [["500+", "Detection events ingested"], ["512-dim", "Embeddings in pgvector"]],
+      "report": [
+        "Built an end-to-end sensor-to-database pipeline (TurtleBot3/Gazebo → ROS2 → YOLOv8 → Zenoh → PostgreSQL) ingesting 500+ detection events.",
+        "Extended it with 512-dim embeddings in pgvector and a semantic graph enabling object re-localization."
+      ],
+      "stack": ["ROS2", "YOLOv8", "Zenoh", "PostgreSQL", "pgvector", "Apache AGE"],
+      "asset": "Pipeline diagram"
+    },
+    {
+      "kit": 4, "pos": "CB", "nickname": "Reads the Game", "club": "Project", "date": "Mar 2026",
+      "title": "Temporal Cycle-Consistency Self-Supervised Video Learning",
+      "short": "TCC Video Learning",
+      "role": "Temporal cycle-consistency from scratch. Literally learns to read the timing.",
+      "attrs": [["0.589", "ALIGN"], ["128", "BEST D"], ["3", "DIMS SWEPT"]],
+      "stats": [["0.589", "Best alignment (D=128)"], ["3", "Embedding sizes swept"]],
+      "report": [
+        "Implemented TCC loss and temporal segmentation from scratch.",
+        "Swept embedding dimensions D = {32, 64, 128}, with D = 128 achieving the best alignment (0.589).",
+        "Analyzed embeddings via PCA, UMAP and t-SNE visualizations."
+      ],
+      "stack": ["PyTorch", "TCC", "PCA", "UMAP", "t-SNE"],
+      "asset": "UMAP embedding plot"
+    },
+    {
+      "kit": 1, "pos": "GK", "nickname": "The Shot-Stopper", "club": "Project", "date": "Feb 2026",
+      "title": "Faster R-CNN Hyperparameter Optimization",
+      "short": "Faster R-CNN HPO",
+      "role": "Saved 22 minutes per trial. Best save of the season.",
+      "attrs": [["30→8", "MIN/TRIAL"], ["+5%", "mAP"], ["4", "STAGES"]],
+      "stats": [["30→8 min", "Per-trial runtime"], ["+5%", "Tuned mAP on VisDrone"], ["4", "HPO stages"]],
+      "report": [
+        "Built a 4-stage Optuna HPO pipeline (training, RPN anchors, RoI sampling, inference) on COCO-2017.",
+        "Cut per-trial runtime from 30 min to 8 min via deferred evaluation.",
+        "Improved tuned mAP 5% over baseline on VisDrone, with a custom VOC-to-COCO converter."
+      ],
+      "stack": ["PyTorch", "Optuna", "W&B", "COCO", "VisDrone"],
+      "asset": "Optuna search plot"
+    }
+  ],
+  "powerups": [
+    { "type": "VISION · 3D", "name": "3D Gaussian Splatting", "move": "29.60 dB on a real lab scene, +2.1 dB over baseline.", "playedBy": [7, 10, 11], "level": 3 },
+    { "type": "VISION · 3D", "name": "Camera Geometry & COLMAP", "move": "621 of 621 frames registered at 0.96 px.", "playedBy": [7], "level": 1 },
+    { "type": "VISION · 3D", "name": "Point-Cloud Registration", "move": "Caught a 28° tilt hiding behind a 5.8 mm RMSE.", "playedBy": [10], "level": 1 },
+    { "type": "PERCEPTION", "name": "Open-Vocab with CLIP", "move": "9 of 10 objects found in 3D from plain words.", "playedBy": [7, 11], "level": 2 },
+    { "type": "PERCEPTION", "name": "Detection & Tracking", "move": "YOLOv8 plus an 8-state Kalman tracker, built from scratch.", "playedBy": [1, 8, 19], "level": 3 },
+    { "type": "DEEP LEARNING", "name": "PyTorch & CUDA", "move": "Trained on a 96GB RTX PRO 6000 Blackwell. Mixed precision, multi-GPU.", "playedBy": [1, 4, 7, 11, 19], "level": 5 },
+    { "type": "DEEP LEARNING", "name": "Self-Supervised Video", "move": "TCC loss from scratch, best alignment 0.589.", "playedBy": [4], "level": 1 },
+    { "type": "ROBOTICS", "name": "ROS2 · Gazebo · Zenoh", "move": "Autonomous capture pipeline, 304 keyframes, zero hands.", "playedBy": [8, 11], "level": 2 },
+    { "type": "MLOPS", "name": "Optuna · W&B · Docker", "move": "Trial time cut from 30 minutes to 8.", "playedBy": [1], "level": 1 }
+  ],
+  "baseStats": ["Python", "C/C++", "SQL", "Java", "Bash"],
+  "stickers": [
+    { "big": "Hala Madrid", "small": "Real Madrid till the final whistle. And after it." },
+    { "big": "CR7", "small": "Why my shirt says 7. Obviously." },
+    { "big": "Nakama wanted", "small": "One Piece fan. Building a crew. Engineers welcome." },
+    { "big": "Believe it", "small": "Naruto taught me the never-give-up debugging style." },
+    { "big": "Friendly neighbourhood ML engineer", "small": "Spider-Man fan. Swings between CUDA errors." },
+    { "big": "Genius. Ex-B.Tech. Future new-grad.", "small": "Iron Man fan. Suit pending funding." },
+    { "big": "Space nerd", "small": "Will explain black holes for 45 min. No extra time needed." },
+    { "big": "Football", "small": "I play too. Not just a keyboard winger." }
+  ],
+  "highlights": {
+    "stats": [["29.60 dB", "PSNR, 3DGS recon"], ["0.46 mm", "Registration, synth GT"], ["621/621", "Frames registered"], ["9/10", "3D queries correct"], ["3.83", "GPA, MS in AI"]],
+    "top3": [
+      ["Language-grounded 3D Gaussian Splatting", "Text to CLIP-embedded 3DGS to XYZ targets for a SmolVLA planner on a physical AR4 arm. 29.60 dB / 0.952 SSIM / 0.078 LPIPS."],
+      ["Sim-to-real geometric alignment", "Umeyama + robust ICP with FPFH+RANSAC, 0.46 mm on synthetic GT. Caught a 28° ICP failure. Merged to aegean-ai/ar4-physical-ai."],
+      ["Open-vocabulary semantic 3D queries", "CLIP ViT-B/32 distilled into Gaussians: 9/10 correct 3D localizations, 4/5 open-vocabulary."]
+    ]
+  }
+}

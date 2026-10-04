@@ -1,0 +1,90 @@
+---
+import { content, copy } from '../content';
+import Bug from './Bug.astro';
+const f = copy.fanzone;
+
+// Sticker looks (colour, rotation, shape, type size) from the desktop board, in content.json order.
+const looks = [
+  { bg: '#f6f3ec', ink: '#08080b', rot: -6, pad: '18px 22px', radius: '18px', size: 44 },
+  { bg: '#f5c542', ink: '#08080b', rot: 5, pad: '18px 26px', radius: '999px', size: 64 },
+  { bg: '#08080b', ink: '#f5c542', rot: -3, pad: '18px 22px', radius: '6px', size: 40 },
+  { bg: '#f6f3ec', ink: '#ff4a3d', rot: 4, pad: '18px 22px', radius: '22px', size: 46 },
+  { bg: '#08080b', ink: '#f6f3ec', rot: -5, pad: '18px 22px', radius: '18px', size: 32 },
+  { bg: '#f5c542', ink: '#08080b', rot: 3, pad: '18px 22px', radius: '8px', size: 32 },
+  { bg: '#f6f3ec', ink: '#08080b', rot: -4, pad: '18px 24px', radius: '999px', size: 44 },
+  { bg: '#08080b', ink: '#f5c542', rot: 6, pad: '18px 22px', radius: '18px', size: 48 },
+];
+---
+
+<section id="fanzone" class="fan" aria-labelledby="fan-h">
+  <div class="fan__dots" aria-hidden="true"></div>
+  <div class="wrap fan__head">
+    <Bug time={f.bugTime} label={f.bug} variant="dark" />
+    <h2 id="fan-h" class="title-xl d fan__title">{f.title}</h2>
+    <p class="fan__line">{f.line}</p>
+  </div>
+
+  <div class="fan__tickers" aria-hidden="true">
+    <div class="fan__band fan__band--1">
+      <div class="marquee d"><span>{f.ticker1}</span><span>{f.ticker1}</span></div>
+    </div>
+    <div class="fan__band fan__band--2">
+      <div class="marquee d"><span>{f.ticker2}</span><span>{f.ticker2}</span></div>
+    </div>
+  </div>
+
+  <ul class="wrap fan__stickers">
+    {content.stickers.map((s, i) => {
+      const k = looks[i % looks.length];
+      return (
+        <li
+          class="stk"
+          style={`--rot:${k.rot}deg;padding:${k.pad};border-radius:${k.radius};background:${k.bg};color:${k.ink}`}
+        >
+          <span class="stk__big d" style={`font-size:${k.size}px`}>{s.big}</span>
+          <span class="stk__small">{s.small}</span>
+        </li>
+      );
+    })}
+  </ul>
+  <p class="fan__hint m">{f.hint}</p>
+</section>
+
+<style>
+  .fan {
+    position: relative; overflow: hidden;
+    padding: clamp(72px, 9cqi, 140px) 0 clamp(96px, 11cqi, 160px);
+    background: var(--red-card); color: var(--on-red);
+  }
+  .fan__dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(8, 8, 11, .22) 1.2px, transparent 1.8px); background-size: 8px 8px;
+  }
+  .fan__head { position: relative; }
+  .fan__title { margin-top: 20px; }
+  .fan__line { margin: 16px 0 0; max-width: 520px; font-size: 19px; line-height: 1.5; font-weight: 500; }
+
+  .fan__tickers { position: relative; margin: 48px -40px 0; height: 190px; }
+  .fan__band { position: absolute; left: 0; right: 0; overflow: hidden; }
+  .fan__band--1 { top: 30px; transform: rotate(-4deg); background: var(--night); color: var(--trophy); }
+  .fan__band--1 .marquee { gap: 32px; padding: 14px 0; font-weight: 900; font-size: 44px; }
+  .fan__band--2 { top: 96px; transform: rotate(3deg); background: var(--floodlight); color: var(--night); }
+  .fan__band--2 .marquee { gap: 32px; padding: 12px 0; font-weight: 800; font-size: 34px; transform: translateX(-50%); }
+
+  .fan__stickers {
+    position: relative; list-style: none; margin: 40px auto 0;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 22px 26px;
+  }
+  .stk {
+    max-width: 300px; border: 3px solid var(--night); box-shadow: 6px 6px 0 var(--night);
+    transform: rotate(var(--rot)); transition: transform .25s var(--ease-spring);
+  }
+  .stk:hover { transform: rotate(0deg) scale(1.08); }
+  .stk__big { display: block; font-weight: 900; line-height: .95; }
+  .stk__small { display: block; margin-top: 6px; font-size: 14px; line-height: 19px; font-weight: 600; }
+  .fan__hint { position: relative; text-align: center; margin: 36px 0 0; font-size: 11px; letter-spacing: .14em; font-weight: 700; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stk:hover { transform: rotate(var(--rot)); }
+  }
+</style>

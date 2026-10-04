@@ -1,0 +1,46 @@
+---
+import { copy } from '../content';
+const { bar, nav } = copy;
+---
+
+<header class="bar">
+  <div class="bar__left">
+    <button type="button" class="bar__seven d" aria-label="Ayush Yadav, number 7. Home.">7</button>
+    <div class="bar__score m">
+      <span class="bar__live"><span class="bar__dot"></span>{bar.live}</span>
+      <span>{bar.scoreHome} <span class="gold">7</span> – {bar.scoreAway}</span>
+    </div>
+  </div>
+  <nav aria-label="Stadium map" class="bar__nav m">
+    {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+  </nav>
+  <a href="#highlights" class="btn btn--red bar__hurry">
+    {bar.hurry}
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 5l7 7-7 7"></path><path d="M4 5l7 7-7 7"></path></svg>
+  </a>
+</header>
+
+<style>
+  .bar {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px clamp(16px, 3cqi, 40px);
+    background: rgba(8, 8, 11, .72); backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(246, 243, 236, .08);
+  }
+  .bar__left { display: flex; align-items: center; gap: 14px; }
+  .bar__seven {
+    width: 44px; height: 44px; padding: 0; border-radius: var(--r-pill);
+    border: 2px solid var(--trophy); background: transparent; color: var(--trophy);
+    cursor: pointer; font-weight: 900; font-size: 26px; line-height: 1;
+  }
+  .bar__score { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: .12em; }
+  .bar__live {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: var(--r-chip);
+    background: var(--red-card); color: var(--on-red); font-weight: 700;
+  }
+  .bar__dot { width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--on-red); }
+  .bar__nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12px; letter-spacing: .12em; }
+  .bar__nav a { color: var(--muted); text-decoration: none; padding: 12px 0; }
+  .bar__nav a:hover { color: var(--floodlight); }
+</style>

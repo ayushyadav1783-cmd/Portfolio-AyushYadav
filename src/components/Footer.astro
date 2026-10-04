@@ -1,0 +1,24 @@
+---
+import { copy } from '../content';
+const f = copy.fulltime;
+---
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <div class="foot__score d" aria-label="Final score: Ayush 7, Bugs 0, full time">
+      <span>Ayush</span><span class="foot__digits">7 – 0</span><span class="muted">Bugs</span><span class="foot__ft m">FT</span>
+    </div>
+    <p class="foot__credits m">{f.footer} <a href="#top">{f.backToTop}</a></p>
+  </div>
+</footer>
+
+<style>
+  .foot { border-top: 1px solid rgba(246, 243, 236, .08); }
+  .foot__inner { padding-top: 28px; padding-bottom: 40px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
+  .foot__score { display: flex; align-items: center; gap: 14px; font-weight: 900; font-size: 34px; }
+  .foot__digits { padding: 2px 12px; border-radius: 6px; background: var(--trophy); color: var(--on-trophy); }
+  .foot__ft { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--red-card); }
+  .foot__credits { margin: 0; font-size: 12px; letter-spacing: .06em; color: var(--muted); }
+  .foot__credits a { color: var(--muted); }
+  .foot__credits a:hover { color: var(--floodlight); }
+</style>

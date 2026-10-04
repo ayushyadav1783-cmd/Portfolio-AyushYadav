@@ -1,0 +1,88 @@
+---
+import type { Project } from '../content';
+
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+
+// Halftone placeholder per position (dot colour, dot pitch), from the desktop board.
+// TODO(asset): replace with the real project visual named in content.json → projects[].asset.
+const art: Record<string, [string, number]> = {
+  ST: ['rgba(245,197,66,.55)', 7],
+  LW: ['rgba(246,243,236,.4)', 6],
+  RW: ['rgba(255,74,61,.6)', 7],
+  CAM: ['rgba(245,197,66,.45)', 5],
+  CM: ['rgba(246,243,236,.35)', 8],
+  CB: ['rgba(255,74,61,.45)', 6],
+  GK: ['rgba(245,197,66,.4)', 9],
+};
+const [dot, pitch] = art[p.pos];
+---
+
+<a
+  href={`#report-${p.kit}`}
+  class="pcard"
+  data-kit={p.kit}
+  data-pos={p.pos}
+  aria-label={`Open match report: ${p.title}`}
+>
+  <span class="pcard__art" style={`--dot:${dot};--pitch:${pitch}px`}>
+    <span class="pcard__kit d">{p.kit}</span>
+    <span class="pcard__pos m">{p.pos} · {p.nickname.toUpperCase()}</span>
+    <span class="pcard__club m">{p.club.toUpperCase()}</span>
+    <span class="pcard__note m">[ASSET] {p.asset.toUpperCase()}</span>
+  </span>
+  <span class="pcard__body">
+    <span class="pcard__title d">{p.short}</span>
+    <span class="pcard__role">{p.role}</span>
+    <span class="pcard__attrs">
+      {p.attrs.map(([v, k]) => (
+        <span class="pcard__attr">
+          <span class="pcard__v m">{v}</span>
+          <span class="pcard__k m">{k}</span>
+        </span>
+      ))}
+    </span>
+  </span>
+</a>
+
+<style>
+  .pcard {
+    position: relative; display: block; width: 100%; border-radius: var(--r-card);
+    background: var(--stand); color: var(--floodlight); text-decoration: none; overflow: hidden;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .5), 0 0 0 1px rgba(246, 243, 236, .1);
+    transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s;
+  }
+  .pcard:hover, .pcard:focus-visible {
+    color: var(--floodlight);
+    transform: perspective(900px) rotateX(6deg) rotateY(-8deg) translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, .6), 0 0 0 1px var(--trophy), 0 0 40px rgba(245, 197, 66, .25);
+  }
+  .pcard__art {
+    position: relative; display: block; height: 150px;
+    background: radial-gradient(circle, var(--dot) 1.2px, transparent 1.8px), var(--tunnel);
+    background-size: var(--pitch) var(--pitch);
+  }
+  .pcard__kit { position: absolute; left: 14px; top: 8px; font-weight: 900; font-size: 54px; line-height: 1; }
+  .pcard__pos { position: absolute; left: 16px; top: 64px; font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--trophy); }
+  .pcard__club {
+    position: absolute; right: 12px; top: 12px; padding: 3px 7px; border-radius: var(--r-chip);
+    background: rgba(8, 8, 11, .7); font-size: 10px; letter-spacing: .1em; color: var(--muted);
+  }
+  .pcard__note { position: absolute; left: 14px; right: 14px; bottom: 10px; font-size: 10px; letter-spacing: .08em; color: rgba(246, 243, 236, .55); }
+  .pcard__body { display: block; padding: 14px 16px 16px; }
+  .pcard__title { display: block; font-weight: 800; font-size: 24px; line-height: 1; }
+  .pcard__role { display: block; margin-top: 6px; font-size: 13px; line-height: 18px; color: var(--muted); }
+  .pcard__attrs {
+    margin-top: 12px; padding-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
+    border-top: 1px solid rgba(246, 243, 236, .1);
+  }
+  .pcard__attr { display: flex; flex-direction: column; gap: 2px; }
+  .pcard__v { font-size: 15px; font-weight: 700; color: var(--trophy); white-space: nowrap; }
+  .pcard__k { font-size: 9px; letter-spacing: .12em; color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pcard:hover, .pcard:focus-visible { transform: none; }
+  }
+</style>
