@@ -2,6 +2,7 @@
 import { gsap } from 'gsap';
 import { reducedMotion } from '../env';
 import { makeCtx, type Drill, type DrillCtx } from './util';
+import { attachArt } from '../cardart';
 
 type Loader = () => Promise<{ start: (ctx: DrillCtx) => Drill }>;
 const LOADERS: Record<string, Loader> = {
@@ -18,6 +19,7 @@ export function initTraining() {
   const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-tg-tab]')];
   const panels = [...root.querySelectorAll<HTMLElement>('[data-tg-panel]')];
   const running = new Map<string, Drill>();
+  root.querySelectorAll<HTMLElement>('[data-tg-art]').forEach((el) => attachArt(el, el.dataset.tgArt!));
   let active = tabs[0].dataset.tgTab!;
   let onScreen = false;
 

@@ -1,6 +1,6 @@
 ---
 // Recruiter escape hatch (spec §8, board 04). Opened by the red pill (#highlights).
-import { content, copy } from '../content';
+import { content, copy, resumeUrl } from '../content';
 const h = copy.highlights;
 const person = content.person;
 ---
@@ -37,7 +37,7 @@ const person = content.person;
     <p class="hl__stack" data-hl-item><span class="m">STACK </span> {h.stack}</p>
 
     <div class="hl__actions" data-hl-item>
-      <a href={person.resume} download="Ayush_Yadav_Resume.pdf" class="btn btn--gold">Download resume</a>
+      <a href={resumeUrl} download="Ayush_Yadav_Resume.pdf" class="btn btn--gold">Download resume</a>
       <a href={`mailto:${person.email}`} class="btn btn--ghost">{person.email}</a>
       <a href={person.linkedin} class="btn btn--ghost" rel="me noopener">LinkedIn</a>
     </div>

@@ -147,24 +147,38 @@ const byKit = Object.fromEntries(content.projects.map((p) => [p.kit, p]));
 
           <dl class="tg__readouts" aria-live="polite" data-tg-readouts></dl>
 
-          <details class="tg__notes" open>
-            <summary class="m">{t.see}</summary>
-            <p>{d.see}</p>
-          </details>
-          <details class="tg__notes">
-            <summary class="m">{t.trap}</summary>
-            <p>{d.trap}</p>
-          </details>
           <div class="tg__real">
             <p class="m">{t.real}</p>
             <p>{d.real}</p>
-          </div>
-          <p class="tg__fine">{d.fineprint}</p>
-          <div class="tg__links">
-            <a href={`#report-${d.kit}`} class="tg__link">{t.report} →</a>
-            {repo?.url && <a href={repo.url} class="tg__link" target="_blank" rel="noopener">{t.code} ↗</a>}
+            <p class="tg__real-h m">SKILLS ON SHOW</p>
+            <ul class="tg__stack" aria-label="Skills on show">
+              {p.stack.map((x) => <li class="m">{x}</li>)}
+            </ul>
+            <p class="tg__big">
+              <span class="tg__big-v d">{p.stats[0][0]}</span>
+              <span class="tg__big-k m">{p.stats[0][1]}</span>
+            </p>
           </div>
         </aside>
+
+        <div class="tg__notesbar">
+          <div class="tg__card">
+            <p class="tg__card-h m">{t.see}</p>
+            <p>{d.see}</p>
+          </div>
+          <div class="tg__card tg__card--trap">
+            <p class="tg__card-h m">{t.trap}</p>
+            <p>{d.trap}</p>
+          </div>
+          <div class="tg__art" aria-hidden="true" data-tg-art={p.pos}><span class="m">ILLUSTRATION · #{d.kit} {p.short.toUpperCase()}</span></div>
+          <div class="tg__foot">
+            <p class="tg__fine">{d.fineprint}</p>
+            <div class="tg__links">
+              <a href={`#report-${d.kit}`} class="tg__link">{t.report} →</a>
+              {repo?.url && <a href={repo.url} class="tg__link" target="_blank" rel="noopener">{t.code} ↗</a>}
+            </div>
+          </div>
+        </div>
       </div>
     );
   })}
@@ -192,8 +206,34 @@ const byKit = Object.fromEntries(content.projects.map((p) => [p.kit, p]));
     .tg__tab-tag { display: none; }
   }
 
-  .tg__panel { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 18px; align-items: start; }
-  @container (max-width: 980px) { .tg__panel { grid-template-columns: 1fr; } }
+  /* Stage + notes on the left, controls + result on the right. Both columns always end level:
+     the shorter one stretches its last block, so there is never an empty patch (Ayush's rule). */
+  .tg__panel {
+    margin-top: 18px; display: grid; gap: 18px;
+    grid-template-columns: minmax(0, 1fr) 360px; grid-template-rows: auto 1fr;
+    grid-template-areas: 'stage side' 'notes side';
+  }
+  .tg__panel[hidden] { display: none; }
+  .tg__stage { grid-area: stage; }
+  .tg__side { grid-area: side; }
+  .tg__notesbar { grid-area: notes; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto minmax(0, 1fr) auto; gap: 12px; }
+  /* Filler that is never blank: the project's animated sketch takes whatever height is spare. */
+  .tg__art {
+    grid-column: 1 / -1; position: relative; min-height: 0; border-radius: 18px; overflow: hidden;
+    background: radial-gradient(circle, rgba(245, 197, 66, .16) 1.1px, transparent 1.7px), var(--tunnel); background-size: 7px 7px;
+  }
+  .tg__art .m { position: absolute; left: 12px; bottom: 10px; z-index: 1; padding: 2px 6px; border-radius: var(--r-chip); background: rgba(8, 8, 11, .7); font-size: 9px; letter-spacing: .12em; color: var(--muted); }
+  @container (max-width: 980px) {
+    .tg__panel { grid-template-columns: 1fr; grid-template-rows: auto; grid-template-areas: 'stage' 'side' 'notes'; }
+  }
+  @container (max-width: 640px) { .tg__notesbar { grid-template-columns: 1fr; } }
+  @container (max-width: 980px) { .tg__art { display: none; } }
+  .tg__card { padding: 16px 18px; border-radius: 18px; background: var(--stand); box-shadow: 0 0 0 1px rgba(246, 243, 236, .06); }
+  .tg__card--trap { box-shadow: 0 0 0 1px rgba(255, 74, 61, .35); background: linear-gradient(160deg, rgba(255, 74, 61, .08), var(--stand) 60%); }
+  .tg__card-h { margin: 0; font-size: 10px; letter-spacing: .14em; color: var(--muted); }
+  .tg__card--trap .tg__card-h { color: var(--red-card); }
+  .tg__card p:last-child { margin: 8px 0 0; font-size: 14px; line-height: 1.55; }
+  .tg__foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 18px; }
   .tg__stage {
     position: relative; aspect-ratio: 16 / 10; border-radius: var(--r-panel); overflow: hidden; overflow: clip;
     background: radial-gradient(circle, rgba(245, 197, 66, .18) 1.2px, transparent 1.8px), var(--tunnel); background-size: 8px 8px;
@@ -206,6 +246,7 @@ const byKit = Object.fromEntries(content.projects.map((p) => [p.kit, p]));
   .tg__poster-name { margin: 0; font-weight: 900; font-size: 44px; line-height: 1; }
 
   .tg__side { display: flex; flex-direction: column; gap: 14px; }
+  .tg__side .tg__real { flex: 1 0 auto; display: flex; flex-direction: column; }
   .tg__tag { margin: 0; font-size: 11px; letter-spacing: .14em; color: var(--red-card); font-weight: 700; }
   .tg__name { margin: -6px 0 0; font-weight: 900; font-size: 44px; line-height: .9; }
   .tg__controls { display: flex; flex-direction: column; gap: 12px; }
@@ -251,16 +292,17 @@ const byKit = Object.fromEntries(content.projects.map((p) => [p.kit, p]));
   .tg__readouts :global(dd) { margin: 0; font: 700 16px var(--font-mono); color: var(--trophy); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tg__readouts :global(dd.is-bad) { color: var(--red-card); }
 
-  .tg__notes { border-top: 1px solid rgba(246, 243, 236, .1); padding-top: 10px; }
-  .tg__notes summary { font-size: 10px; letter-spacing: .14em; color: var(--muted); cursor: pointer; list-style: none; }
-  .tg__notes summary::-webkit-details-marker { display: none; }
-  .tg__notes summary::after { content: ' +'; color: var(--trophy); }
-  .tg__notes[open] summary::after { content: ' –'; }
-  .tg__notes p { margin: 8px 0 0; font-size: 14px; line-height: 1.55; color: var(--floodlight); }
   .tg__real { padding: 12px 14px; border-radius: 14px; background: rgba(245, 197, 66, .08); border: 1px solid rgba(245, 197, 66, .35); }
   .tg__real .m { margin: 0; font-size: 10px; letter-spacing: .14em; color: var(--trophy); }
-  .tg__real p:last-child { margin: 6px 0 0; font-size: 14px; line-height: 1.5; }
-  .tg__fine { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+  .tg__real > p:nth-child(2) { margin: 6px 0 0; font-size: 14px; line-height: 1.5; }
+  .tg__real-h { margin: 14px 0 0; font-size: 10px; letter-spacing: .14em; color: var(--muted); }
+  .tg__stack { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tg__stack li { padding: 5px 10px; border-radius: var(--r-pill); background: rgba(8, 8, 11, .55); font-size: 11px; }
+  /* Headline number anchored to the bottom, so a stretched card reads as designed, not padded. */
+  .tg__big { margin: auto 0 0; padding-top: 16px; display: flex; flex-direction: column; gap: 2px; }
+  .tg__big-v { font-weight: 900; font-size: clamp(40px, 4vw, 56px); line-height: .9; color: var(--trophy); }
+  .tg__big-k { font-size: 10px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; }
+  .tg__fine { margin: 0; flex: 1 1 320px; font-size: 12px; line-height: 1.5; color: var(--muted); }
   .tg__links { display: flex; flex-wrap: wrap; gap: 14px; }
   .tg__link { font-weight: 600; font-size: 14px; color: var(--trophy); }
 </style>

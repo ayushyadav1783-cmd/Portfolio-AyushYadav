@@ -11,6 +11,10 @@ export type Sticker = (typeof content.stickers)[number];
 
 export { content, copy };
 
+/** Prefix a root path ('/resume.pdf') with the deploy base (GitHub Pages serves under /Portfolio-AyushYadav). */
+export const withBase = (path: string) => `${import.meta.env.BASE_URL.replace(/\/$/, '')}${path}`;
+export const resumeUrl = withBase(content.person.resume);
+
 /** Projects keyed by formation position (LW, ST, RW, CAM, CM, CB, GK). */
 export const byPos = Object.fromEntries(content.projects.map((p) => [p.pos, p])) as Record<string, Project>;
 

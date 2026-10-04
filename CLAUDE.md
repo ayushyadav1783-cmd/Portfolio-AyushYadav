@@ -34,7 +34,7 @@ Ayush changed these after the spec was written. They're applied in the spec, con
 
 ## Fixed decisions (do not reopen)
 
-- Astro + React islands, TypeScript, deployed on Vercel. Not Next.js.
+- Astro + React islands, TypeScript. Not Next.js. Deployed to **GitHub Pages** (Ayush's change from Vercel, 2026-10-04): repo ayushyadav1783-cmd/Portfolio-AyushYadav, base `/Portfolio-AyushYadav`, workflow `.github/workflows/deploy.yml`. Use `withBase()` for root paths.
 - GSAP 3 (ScrollTrigger, SplitText, Flip) + Lenis. No Framer Motion or any second animation library.
 - OGL only, one shared renderer. No three.js / R3F in v1.
 - matter-js, desktop only. Howler, off by default, built last.

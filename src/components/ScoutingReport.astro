@@ -1,6 +1,6 @@
 ---
 // Resume viewer (spec §8.1). Opened by any [data-resume] link; /resume.pdf is the no-JS fallback.
-import { content, copy } from '../content';
+import { content, copy, resumeUrl } from '../content';
 const s = copy.scouting;
 const person = content.person;
 const edu = person.education[0];
@@ -36,8 +36,8 @@ const exp = person.experience[0];
     </div>
 
     <footer class="scout__actions">
-      <a href={person.resume} download="Ayush_Yadav_Resume.pdf" class="btn btn--gold">{s.download}</a>
-      <a href={person.resume} target="_blank" rel="noopener" class="btn btn--ghost">{s.open}</a>
+      <a href={resumeUrl} download="Ayush_Yadav_Resume.pdf" class="btn btn--gold">{s.download}</a>
+      <a href={resumeUrl} target="_blank" rel="noopener" class="btn btn--ghost">{s.open}</a>
       <button type="button" class="scout__back" data-scout-close>{s.close}</button>
     </footer>
   </div>

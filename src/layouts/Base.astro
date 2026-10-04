@@ -1,5 +1,6 @@
 ---
 import '../styles/fonts.css';
+import { withBase } from '../content';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import displayFont from '@fontsource/big-shoulders-display/files/big-shoulders-display-latin-900-normal.woff2?url';
@@ -25,7 +26,7 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
