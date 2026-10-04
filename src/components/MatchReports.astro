@@ -23,7 +23,7 @@ const order = formation.flat(); // reading order on the pitch: LW, ST, RW, CAM, 
           <div class="report__art" style={`--dot:${dot};--pitch:${pitch + 3}px`}>
             <span class="report__kit d">{p.kit}</span>
             <span class="report__pos m">{p.pos} · {p.nickname.toUpperCase()}</span>
-            <span class="report__asset m">[ASSET] {p.asset.toUpperCase()}</span>
+            <span class="report__asset m">ILLUSTRATION · NOT A RESULT · REAL {p.asset.toUpperCase()} COMING</span>
           </div>
 
           <div class="report__info">
@@ -104,8 +104,8 @@ const order = formation.flat(); // reading order on the pitch: LW, ST, RW, CAM, 
     background-size: var(--pitch) var(--pitch);
   }
   .report__kit { position: absolute; left: 28px; top: 16px; font-weight: 900; font-size: clamp(120px, 14vw, 200px); line-height: 1; }
-  .report__pos { position: absolute; left: 32px; top: clamp(150px, 17vw, 230px); font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--trophy); }
-  .report__asset { position: absolute; left: 32px; right: 32px; bottom: 24px; font-size: 11px; letter-spacing: .1em; color: rgba(246, 243, 236, .55); }
+  .report__pos { position: absolute; left: 28px; padding: 3px 8px; border-radius: var(--r-chip); background: rgba(8, 8, 11, .78); top: clamp(150px, 17vw, 230px); font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--trophy); }
+  .report__asset { position: absolute; left: 28px; right: 28px; bottom: 24px; padding: 4px 8px; border-radius: var(--r-chip); background: rgba(8, 8, 11, .7); font-size: 11px; letter-spacing: .1em; color: rgba(246, 243, 236, .55); }
 
   .report__info { padding: clamp(28px, 4vw, 56px); padding-top: 72px; }
   .report__kicker { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--red-card); }
