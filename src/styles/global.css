@@ -10,6 +10,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 img, svg { display: block; }
+[hidden] { display: none !important; } /* component display rules must never beat the hidden attribute */
 a { color: var(--trophy); }
 a:hover { color: var(--floodlight); }
 :focus-visible { outline: 2px solid var(--trophy); outline-offset: 3px; }

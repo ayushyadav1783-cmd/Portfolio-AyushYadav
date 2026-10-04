@@ -1,15 +1,11 @@
-// Full Time Whistle (spec §5.6): whistle flash, headline slam + type-on, chat with typing indicator
-// and quick replies, mailto submit, copy-email, split-flap scoreboard.
+// Full Time Whistle (spec §5.6): whistle flash, headline slam + type-on, copy-email, split-flap
+// scoreboard. The penalty shootout + transfer bid that replaced the chat live in shootout.ts.
 import { gsap } from 'gsap';
-import { Flip } from 'gsap/Flip';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { reducedMotion } from './env';
 
-gsap.registerPlugin(Flip, ScrollTrigger, SplitText);
-
-const TYPING_MS = 700;
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export function initFullTime() {
   const section = document.querySelector<HTMLElement>('[data-fulltime]');
@@ -19,7 +15,6 @@ export function initFullTime() {
     headline(section);
     scoreboard();
   }
-  chat(section);
   copyEmail(section);
 }
 
@@ -57,118 +52,6 @@ function headline(section: HTMLElement) {
         .to('main', { keyframes: { x: [-4, 4, -3, 3, -1, 0] }, duration: 0.24, ease: 'none', clearProps: 'transform' })
         .to(chars, { visibility: 'visible', duration: 0.001, stagger: 0.06 }, '+=0.05');
     },
-  });
-}
-
-/** Chat: messages one at a time with a typing indicator; quick replies pop in; replies fly to the thread. */
-function chat(section: HTMLElement) {
-  const thread = section.querySelector<HTMLElement>('[data-chat-thread]');
-  const chips = section.querySelector<HTMLElement>('[data-chat-chips]');
-  const form = section.querySelector<HTMLFormElement>('[data-chat-form]');
-  if (!thread || !chips || !form) return;
-  const opening = [...thread.querySelectorAll<HTMLElement>('[data-chat-msg]')];
-  const chipEls = [...chips.querySelectorAll<HTMLButtonElement>('[data-chip]')];
-
-  // Fixed-height thread with room for replies, so new messages never push the layout (CLS).
-  thread.style.height = `${thread.scrollHeight + 150}px`;
-  thread.style.overflowY = 'auto';
-
-  let busy = false;
-  const typing = () => {
-    const t = document.createElement('span');
-    t.className = 'typing';
-    t.setAttribute('aria-hidden', 'true');
-    t.innerHTML = '<i></i><i></i><i></i>';
-    return t;
-  };
-  const dots = (t: HTMLElement) =>
-    gsap.to(t.querySelectorAll('i'), { y: -4, duration: 0.25, stagger: { each: 0.12, repeat: -1, yoyo: true }, ease: 'sine.inOut' });
-
-  /** Shows the typing indicator where `bubble` will appear, then reveals it. */
-  async function say(bubble: HTMLElement) {
-    if (reducedMotion) { gsap.set(bubble, { autoAlpha: 1 }); return; }
-    const t = typing();
-    thread!.appendChild(t);
-    t.style.left = `${bubble.offsetLeft}px`;
-    t.style.top = `${bubble.offsetTop}px`;
-    const anim = dots(t);
-    thread!.scrollTo({ top: bubble.offsetTop - 20 });
-    await wait(TYPING_MS);
-    anim.kill();
-    t.remove();
-    gsap.fromTo(bubble, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.35, ease: 'expo.out' });
-  }
-
-  // Opening sequence on enter.
-  if (!reducedMotion) {
-    gsap.set(opening, { autoAlpha: 0 });
-    gsap.set(chipEls, { autoAlpha: 0, scale: 0.6 });
-    ScrollTrigger.create({
-      trigger: thread,
-      start: 'top 75%',
-      once: true,
-      onEnter: async () => {
-        busy = true;
-        for (const m of opening) await say(m);
-        await wait(200);
-        gsap.to(chipEls, { autoAlpha: 1, scale: 1, duration: 0.5, stagger: 0.08, ease: 'back.out(2.4)' });
-        busy = false;
-      },
-    });
-  }
-
-  // Quick replies: the user bubble flies from the chip into the thread, then Ayush types back.
-  chipEls.forEach((chip) => {
-    chip.addEventListener('click', async () => {
-      if (busy) return;
-      busy = true;
-      const i = chip.dataset.chip!;
-      const answer = chips.querySelector<HTMLTemplateElement>(`template[data-answer="${i}"]`)!.content.textContent ?? '';
-
-      const you = document.createElement('p');
-      you.className = 'bubble bubble--you';
-      you.textContent = chip.textContent;
-      const me = document.createElement('p');
-      me.className = 'bubble bubble--me';
-      me.textContent = answer;
-
-      const state = Flip.getState(chip);
-      chip.dataset.flipId = `chip-${i}`;
-      you.dataset.flipId = `chip-${i}`;
-      thread.appendChild(you);
-      thread.appendChild(me);
-      gsap.set(me, { autoAlpha: 0 });
-      thread.scrollTo({ top: thread.scrollHeight });
-      chip.disabled = true;
-      chip.style.visibility = 'hidden';
-
-      if (!reducedMotion) {
-        await Flip.from(state, { targets: you, duration: 0.5, ease: 'expo.out', absolute: true, scale: true }).then();
-      }
-      // Used chips leave the row; the rest stay.
-      gsap.to(chip, { width: 0, paddingLeft: 0, paddingRight: 0, marginLeft: -8, borderWidth: 0, duration: reducedMotion ? 0 : 0.25, onComplete: () => chip.remove() });
-      await say(me);
-      thread.scrollTo({ top: thread.scrollHeight });
-      busy = false;
-    });
-  });
-
-  // Input: open the visitor's email client with the message (spec: mailto with subject + body).
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = form.querySelector<HTMLInputElement>('input[name="body"]')!;
-    const body = input.value.trim();
-    const url = `mailto:${form.dataset.email}?subject=${encodeURIComponent(form.dataset.subject ?? '')}&body=${encodeURIComponent(body)}`;
-    if (body) {
-      const you = document.createElement('p');
-      you.className = 'bubble bubble--you';
-      you.textContent = body;
-      thread.appendChild(you);
-      thread.scrollTo({ top: thread.scrollHeight });
-      if (!reducedMotion) gsap.from(you, { autoAlpha: 0, y: 12, duration: 0.35, ease: 'expo.out' });
-      input.value = '';
-    }
-    window.location.href = url;
   });
 }
 

@@ -214,5 +214,81 @@
     "download": "Download PDF",
     "open": "Open in new tab",
     "close": "Back to the match"
+  },
+  "shootout": {
+    "_note": "Replaces the quick-reply chat on Ayush's request (2026-10-04).",
+    "kicker": "FULL TIME · PENALTY",
+    "title": "Take a penalty.",
+    "sub": "Pick a corner. I'm in goal.",
+    "zones": [
+      [
+        "tl",
+        "Top left"
+      ],
+      [
+        "tc",
+        "Top centre"
+      ],
+      [
+        "tr",
+        "Top right"
+      ],
+      [
+        "bl",
+        "Bottom left"
+      ],
+      [
+        "bc",
+        "Bottom centre"
+      ],
+      [
+        "br",
+        "Bottom right"
+      ]
+    ],
+    "shootLabel": "Shoot",
+    "scoreYou": "YOU",
+    "scoreMe": "AYUSH",
+    "goal": "Goal!",
+    "goalLine": "Clinical. Now put that energy into a transfer bid.",
+    "saved": "Saved!",
+    "savedLine": "Nothing gets past me. Except a good offer.",
+    "toBid": "Make a transfer bid →",
+    "again": "Shoot again",
+    "skip": "Skip the penalty, go straight to the bid"
+  },
+  "bid": {
+    "kicker": "TRANSFER WINDOW · OPEN",
+    "title": "Make a transfer bid.",
+    "club": "Your club",
+    "clubPlaceholder": "Company or lab",
+    "position": "Position",
+    "positions": [
+      "Computer vision",
+      "3D vision",
+      "Robotics"
+    ],
+    "contract": "Contract",
+    "contracts": [
+      "New-grad, full-time",
+      "Internship"
+    ],
+    "kickoff": "Kickoff",
+    "kickoffs": [
+      "May 2027",
+      "Later in 2027",
+      "Flexible"
+    ],
+    "note": "Anything else",
+    "notePlaceholder": "Team, location, what you're building…",
+    "submit": "Submit bid",
+    "docTitle": "Transfer agreement",
+    "docPlayer": "Ayush Yadav · No. 7",
+    "docBlank": "________",
+    "stamp": "DEAL AGREED ✓",
+    "mailSubject": "Transfer bid",
+    "mailSign": "Sent from the transfer window on your portfolio.",
+    "status": "Bid ready. Your email app is opening with it.",
+    "back": "← Back to the penalty"
   }
 }

@@ -286,6 +286,8 @@ The toggle sits in the broadcast bar ("Crowd: off"). Sounds: a low crowd bed, fl
 
 ### 5.6 Full Time Whistle (Contact)
 
+> **Changed on Ayush's request (2026-10-04):** the quick-reply chat is replaced by a **penalty shootout** (pick one of 6 corners; the keeper, an original shape in a gold No. 7 shirt, reads one shot in three; GOAL = net bulge + ripple from the impact point, confetti, shake; SAVED = glove flash and the ball punched away; running score YOU n – n AYUSH) that leads into a **transfer bid** form (club, position, contract, kickoff, note) with a live "Transfer agreement" document and a DEAL AGREED stamp, which opens the visitor's email with the bid prefilled. A "skip the penalty" link goes straight to the bid; without JS only the bid form shows. Copy lives in copy.json → shootout / bid.
+
 **Layout:** a massive "FULL TIME. / YOUR MOVE." headline (red full stop, gold second line). Below it, two columns. Left is a chat window: header with avatar, name and status; the message thread; quick-reply chips; an input with a send button. Right is "OR SKIP THE SMALL TALK": a big gold copy-email button, then GitHub / LinkedIn / Resume rows with playful descriptions, then the availability line. Footer: the final scoreboard `AYUSH 7 – 0 BUGS · FT` plus credits and "back to kickoff ↑".
 
 **Copy**

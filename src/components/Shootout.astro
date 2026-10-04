@@ -1,0 +1,239 @@
+---
+// Full Time interactive (replaces the quick-reply chat, on Ayush's request): a penalty shootout
+// against "Ayush" in goal, which leads into a transfer-bid form that opens the visitor's email.
+// Without JS only the bid form shows (it still submits to mailto).
+import { content, copy } from '../content';
+const s = copy.shootout;
+const b = copy.bid;
+const email = content.person.email;
+---
+
+<div class="shoot" data-shoot>
+  <!-- Penalty -->
+  <div class="shoot__game" data-shoot-game hidden>
+    <div class="shoot__head">
+      <div>
+        <p class="shoot__kicker m">{s.kicker}</p>
+        <h3 class="shoot__title d">{s.title}</h3>
+        <p class="shoot__sub">{s.sub}</p>
+      </div>
+      <p class="shoot__score m" aria-live="polite"><span>{s.scoreYou}</span> <b data-score-you>0</b> – <b data-score-me>0</b> <span>{s.scoreMe}</span></p>
+    </div>
+
+    <div class="pen" data-pen>
+      <div class="pen__goal" data-goal>
+        <span class="pen__net" aria-hidden="true" data-net></span>
+        <span class="pen__ripple" aria-hidden="true" data-net-ripple></span>
+        <div class="pen__zones">
+          {s.zones.map(([id, label]) => (
+            <button type="button" class="pen__zone" data-zone-id={id} aria-label={`${s.shootLabel}: ${label}`}>
+              <span class="pen__target" aria-hidden="true"></span>
+            </button>
+          ))}
+        </div>
+        <!-- Keeper: an original shape, shirt number 7 -->
+        <div class="keeper" aria-hidden="true" data-keeper>
+          <span class="keeper__head"></span>
+          <span class="keeper__arm keeper__arm--l"><i></i></span>
+          <span class="keeper__arm keeper__arm--r"><i></i></span>
+          <span class="keeper__body d">7</span>
+        </div>
+      </div>
+      <span class="pen__spot" aria-hidden="true"></span>
+      <span class="ball" aria-hidden="true" data-ball><i></i></span>
+      <p class="pen__shout d" aria-hidden="true" data-shout></p>
+    </div>
+
+    <div class="shoot__result" data-result hidden>
+      <p class="shoot__line" data-result-line aria-live="polite"></p>
+      <div class="shoot__actions">
+        <button type="button" class="btn btn--gold" data-to-bid>{s.toBid}</button>
+        <button type="button" class="btn btn--ghost" data-again>{s.again}</button>
+      </div>
+    </div>
+    <button type="button" class="shoot__skip" data-to-bid>{s.skip}</button>
+  </div>
+
+  <!-- Transfer bid -->
+  <div class="bid" data-bid>
+    <div class="bid__form-col">
+      <p class="shoot__kicker m">{b.kicker}</p>
+      <h3 class="shoot__title d">{b.title}</h3>
+      <form class="bid__form" action={`mailto:${email}`} method="get" enctype="text/plain" data-bid-form data-email={email}>
+        <label class="field">
+          <span class="field__label m">{b.club}</span>
+          <input name="club" type="text" required autocomplete="organization" placeholder={b.clubPlaceholder} data-bid-club />
+        </label>
+        <fieldset class="field">
+          <legend class="field__label m">{b.position}</legend>
+          <div class="chips">
+            {b.positions.map((v, i) => (
+              <label class="chip-opt"><input type="radio" name="position" value={v} checked={i === 0} /><span>{v}</span></label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend class="field__label m">{b.contract}</legend>
+          <div class="chips">
+            {b.contracts.map((v, i) => (
+              <label class="chip-opt"><input type="radio" name="contract" value={v} checked={i === 0} /><span>{v}</span></label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend class="field__label m">{b.kickoff}</legend>
+          <div class="chips">
+            {b.kickoffs.map((v, i) => (
+              <label class="chip-opt"><input type="radio" name="kickoff" value={v} checked={i === 0} /><span>{v}</span></label>
+            ))}
+          </div>
+        </fieldset>
+        <label class="field">
+          <span class="field__label m">{b.note}</span>
+          <textarea name="note" rows="2" placeholder={b.notePlaceholder}></textarea>
+        </label>
+        <div class="bid__submit-row">
+          <button type="submit" class="btn btn--gold">{b.submit}</button>
+          <button type="button" class="shoot__skip" data-to-game hidden>{b.back}</button>
+        </div>
+        <p class="sr-only" aria-live="polite" data-bid-status></p>
+      </form>
+    </div>
+
+    <div class="doc" aria-hidden="true" data-doc>
+      <p class="doc__title d">{b.docTitle}</p>
+      <p class="doc__player m">{b.docPlayer}</p>
+      <dl class="doc__rows">
+        <dt class="m">CLUB</dt><dd data-doc-field="club">{b.docBlank}</dd>
+        <dt class="m">POSITION</dt><dd data-doc-field="position">{b.positions[0]}</dd>
+        <dt class="m">CONTRACT</dt><dd data-doc-field="contract">{b.contracts[0]}</dd>
+        <dt class="m">KICKOFF</dt><dd data-doc-field="kickoff">{b.kickoffs[0]}</dd>
+      </dl>
+      <div class="doc__sign">
+        <span><i></i><span class="m">CLUB</span></span>
+        <span><i class="doc__signed">Ayush Yadav</i><span class="m">PLAYER</span></span>
+      </div>
+      <p class="doc__stamp d" data-stamp>{b.stamp}</p>
+    </div>
+  </div>
+  <template data-shoot-copy data-goal={s.goal} data-saved={s.saved} data-goal-line={s.goalLine} data-saved-line={s.savedLine}></template>
+  <template data-bid-copy data-subject={b.mailSubject} data-sign={b.mailSign} data-status={b.status} data-blank={b.docBlank}></template>
+</div>
+
+<style>
+  .shoot {
+    position: relative; flex: 999 1 520px; min-width: 0; max-width: 680px; border-radius: var(--r-panel);
+    background: var(--stand); box-shadow: 0 0 0 1px rgba(246, 243, 236, .08); padding: clamp(20px, 3vw, 28px); overflow: hidden;
+  }
+  .shoot__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .shoot__kicker { margin: 0; font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--red-card); }
+  .shoot__title { margin: 8px 0 0; font-weight: 900; font-size: clamp(36px, 4vw, 52px); line-height: .9; }
+  .shoot__sub { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+  .shoot__score { margin: 4px 0 0; font-size: 12px; letter-spacing: .12em; color: var(--muted); white-space: nowrap; }
+  .shoot__score b { color: var(--trophy); font-size: 18px; }
+
+  /* Penalty */
+  .pen {
+    position: relative; margin-top: 18px; height: 300px; border-radius: 18px; overflow: hidden; overflow: clip;
+    background: var(--pitch);
+    background-image: repeating-linear-gradient(0deg, rgba(246, 243, 236, .03) 0 30px, transparent 30px 60px);
+  }
+  .pen__goal {
+    position: absolute; left: 10%; right: 10%; top: 26px; height: 150px;
+    border: 6px solid var(--floodlight); border-bottom: 0; border-radius: 4px 4px 0 0;
+  }
+  .pen__net {
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(246, 243, 236, .16) 0 1px, transparent 1px 14px),
+      repeating-linear-gradient(-45deg, rgba(246, 243, 236, .16) 0 1px, transparent 1px 14px);
+    transform-origin: var(--nx, 50%) var(--ny, 50%);
+  }
+  .pen__ripple {
+    position: absolute; left: var(--nx, 50%); top: var(--ny, 50%); width: 14px; height: 14px; margin: -7px 0 0 -7px;
+    border-radius: var(--r-pill); border: 2px solid rgba(246, 243, 236, .7); opacity: 0;
+  }
+  .pen__zones { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); z-index: 2; }
+  .pen__zone { position: relative; border: 0; background: transparent; cursor: crosshair; padding: 0; }
+  .pen__target {
+    position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: var(--r-pill);
+    border: 2px dashed rgba(245, 197, 66, .55); opacity: .35; transition: opacity .2s, transform .3s var(--ease-spring), border-color .2s;
+  }
+  .pen__zone:hover .pen__target, .pen__zone:focus-visible .pen__target { opacity: 1; transform: scale(1.25); border-color: var(--trophy); border-style: solid; }
+  .pen__zone:focus-visible { outline-offset: -4px; }
+  .pen.is-locked .pen__zone { pointer-events: none; }
+
+  .keeper { position: absolute; left: 50%; bottom: 0; width: 46px; height: 92px; margin-left: -23px; transform-origin: 50% 100%; z-index: 1; }
+  .keeper__head { position: absolute; left: 50%; top: 0; width: 22px; height: 22px; margin-left: -11px; border-radius: var(--r-pill); background: var(--muted); }
+  .keeper__body {
+    position: absolute; left: 0; right: 0; top: 24px; bottom: 0; border-radius: 12px 12px 6px 6px; background: var(--trophy);
+    color: var(--on-trophy); font-weight: 900; font-size: 26px; display: flex; align-items: center; justify-content: center;
+  }
+  .keeper__arm { position: absolute; top: 28px; width: 10px; height: 40px; border-radius: 6px; background: var(--trophy); transform-origin: 50% 0; }
+  .keeper__arm i { position: absolute; left: -3px; bottom: -8px; width: 16px; height: 16px; border-radius: var(--r-pill); background: var(--floodlight); }
+  .keeper__arm--l { left: -8px; transform: rotate(28deg); }
+  .keeper__arm--r { right: -8px; transform: rotate(-28deg); }
+
+  .pen__spot { position: absolute; left: 50%; bottom: 40px; width: 8px; height: 8px; margin-left: -4px; border-radius: var(--r-pill); background: rgba(246, 243, 236, .5); }
+  .ball {
+    position: absolute; left: 50%; bottom: 34px; width: 34px; height: 34px; margin-left: -17px; z-index: 3;
+    border-radius: var(--r-pill); background: var(--floodlight); box-shadow: inset -7px -5px 0 rgba(8, 8, 11, .22);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ball i { width: 11px; height: 11px; background: var(--night); clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%); }
+  .pen__shout {
+    position: absolute; left: 0; right: 0; top: 50%; margin: -40px 0 0; text-align: center; z-index: 4; pointer-events: none;
+    font-weight: 900; font-size: clamp(60px, 9vw, 96px); line-height: .9; color: var(--trophy); text-shadow: 5px 5px 0 var(--red-card); opacity: 0;
+  }
+
+  .shoot__result { margin-top: 16px; }
+  .shoot__line { margin: 0; font-size: 17px; line-height: 1.5; }
+  .shoot__actions { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .shoot__skip {
+    margin-top: 12px; min-height: 44px; padding: 0; border: 0; background: transparent; color: var(--muted);
+    font: 500 14px var(--font-body); text-decoration: underline; cursor: pointer;
+  }
+  .shoot__skip:hover { color: var(--floodlight); }
+
+  /* Transfer bid */
+  .bid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  @media (min-width: 1100px) { .bid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
+  .bid__form { margin-top: 18px; display: flex; flex-direction: column; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; border: 0; min-width: 0; }
+  .field__label { font-size: 11px; letter-spacing: .14em; color: var(--muted); padding: 0; }
+  .field input[type='text'], .field textarea {
+    width: 100%; min-height: 48px; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--control);
+    background: var(--night); color: var(--floodlight); font: 15px var(--font-body); resize: vertical;
+  }
+  .field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+  .field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--trophy); outline-offset: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip-opt { position: relative; }
+  .chip-opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .chip-opt span {
+    display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: var(--r-pill);
+    border: 1px solid var(--trophy); color: var(--trophy); font-weight: 600; font-size: 14px; transition: background-color .2s, color .2s;
+  }
+  .chip-opt input:checked + span { background: var(--trophy); color: var(--on-trophy); }
+  .chip-opt input:focus-visible + span { outline: 2px solid var(--trophy); outline-offset: 3px; }
+  .bid__submit-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+
+  .doc {
+    position: relative; align-self: start; padding: 22px; border-radius: 16px;
+    background: var(--floodlight); color: var(--night); box-shadow: 0 20px 40px rgba(0, 0, 0, .45); transform: rotate(1.2deg);
+  }
+  .doc__title { margin: 0; font-weight: 900; font-size: 28px; line-height: .9; }
+  .doc__player { margin: 6px 0 0; font-size: 11px; letter-spacing: .14em; color: #5b5a63; }
+  .doc__rows { margin: 16px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: 15px; line-height: 20px; }
+  .doc__rows dt { font-size: 10px; line-height: 20px; letter-spacing: .14em; color: #5b5a63; }
+  .doc__rows dd { margin: 0; font-weight: 600; border-bottom: 1px dashed rgba(8, 8, 11, .25); overflow-wrap: anywhere; }
+  .doc__sign { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .doc__sign > span { display: flex; flex-direction: column; gap: 4px; }
+  .doc__sign i { display: block; height: 26px; border-bottom: 1.5px solid var(--night); font-family: var(--font-display); font-style: normal; font-size: 20px; line-height: 26px; }
+  .doc__sign .m { font-size: 10px; letter-spacing: .14em; color: #5b5a63; }
+  .doc__stamp {
+    position: absolute; right: 14px; bottom: 54px; margin: 0; padding: 4px 12px; border: 4px solid var(--red-card); border-radius: 8px;
+    color: var(--red-card); font-weight: 900; font-size: 30px; line-height: 1; transform: rotate(-12deg); opacity: 0; pointer-events: none;
+    background: rgba(246, 243, 236, .85);
+  }
+</style>
