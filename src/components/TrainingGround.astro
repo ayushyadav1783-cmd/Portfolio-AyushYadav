@@ -38,7 +38,7 @@ const byKit = Object.fromEntries(content.projects.map((p) => [p.kit, p]));
     const repo = repos[String(d.kit)];
     return (
       <div class="tg__panel" role="tabpanel" id={`tg-panel-${d.id}`} aria-labelledby={`tg-tab-${d.id}`} data-tg-panel={d.id} hidden={i !== 0}>
-        <div class="tg__stage" data-tg-stage>
+        <div class="tg__stage" data-tg-stage data-cursor={d.id === 'tracker' ? 'drone' : d.id === 'splat' || d.id === 'icp' ? 'drag' : undefined}>
           <div class="tg__poster" data-tg-poster>
             <span class="tg__poster-kit d" aria-hidden="true">{d.kit}</span>
             <p class="tg__poster-name d">{d.name}</p>

@@ -29,6 +29,7 @@ Ayush changed these after the spec was written. They're applied in the spec, con
 - Fan Zone: each sticker gets its own signature full-screen trick on click (2026-10-04).
 - Hero: no walkout pin; parallax-only exit. Rule from Ayush: no useless scrolls, no black or plain screens anywhere (2026-10-04).
 - Training Ground section with five live drills (spec §5.4b); cards show animated project illustrations; reports link to code (repos.json) (2026-10-04).
+- WebGL contexts: the hero sky (starfield + planet) is the shared OGL renderer; Splat Lab runs its own context only while that drill is open (2026-10-04).
 - `resume/resume.tex` is the resume source (copied from MASTER_FINAL.tex). Rebuild `assets/resume.pdf` from it; see resume/README.md.
 
 ## Fixed decisions (do not reopen)
