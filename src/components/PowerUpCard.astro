@@ -18,8 +18,9 @@ const aura = {
 }[family];
 ---
 
-<article class:list={['pu', `pu--${family}`]} tabindex="0" data-level={u.level}>
+<article class:list={['pu', `pu--${family}`]} tabindex="0" data-pu data-level={u.level}>
   <span class="pu__aura" style={`--aura:${aura}`} aria-hidden="true"></span>
+  <span class="pu__speed" aria-hidden="true" data-pu-speed><i></i><i></i><i></i><i></i></span>
   <div class="pu__top">
     <span class="pu__type m">{u.type}</span>
     <span class="pu__by m">PLAYED BY {u.playedBy.map((n) => `#${n}`).join(' ')}</span>
@@ -30,26 +31,40 @@ const aura = {
     <div class="pu__meter-head m">
       <span>POWER LEVEL</span><span class="pu__lvl">{u.level}/7</span>
     </div>
-    <div class="pu__segs" aria-hidden="true">
+    <div class="pu__segs" aria-hidden="true" data-pu-segs>
       {Array.from({ length: 7 }, (_, i) => <span class:list={{ on: i < u.level }}></span>)}
     </div>
   </div>
 </article>
 
 <style>
+  /* Lift uses the individual translate/scale properties so it stacks with GSAP's transform
+     (deal-in, spring grid) instead of fighting it. Spring easing from the tokens. */
   .pu {
     position: relative; padding: 24px; border-radius: var(--r-card); background: var(--stand); overflow: hidden;
     box-shadow: 0 0 0 1px rgba(246, 243, 236, .08);
-    transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s;
+    transition: translate .45s var(--ease-spring), scale .45s var(--ease-spring), box-shadow .3s;
   }
   .pu:hover, .pu:focus-visible {
-    transform: translateY(-10px) scale(1.02);
+    translate: 0 -10px; scale: 1.02;
     box-shadow: 0 0 0 1px var(--trophy), 0 0 48px rgba(245, 197, 66, .35), 0 0 120px rgba(255, 74, 61, .18);
   }
   .pu__aura {
     position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: var(--r-pill);
     background: radial-gradient(circle, var(--aura), rgba(8, 8, 11, 0) 70%);
+    transition: scale .45s var(--ease-out), filter .45s var(--ease-out);
   }
+  .pu:hover .pu__aura, .pu:focus-visible .pu__aura { scale: 1.45; filter: brightness(1.8) saturate(1.2); }
+  /* Speed lines streak behind the content for 300ms on hover/focus (JS-driven). */
+  .pu__speed { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+  .pu__speed i {
+    position: absolute; left: 0; height: 1px; width: 70%;
+    background: linear-gradient(90deg, rgba(245, 197, 66, 0), rgba(245, 197, 66, .7), rgba(246, 243, 236, 0));
+  }
+  .pu__speed i:nth-child(1) { top: 22%; }
+  .pu__speed i:nth-child(2) { top: 41%; width: 55%; }
+  .pu__speed i:nth-child(3) { top: 63%; }
+  .pu__speed i:nth-child(4) { top: 82%; width: 45%; }
   .pu__top { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
   .pu__type { font-size: 11px; letter-spacing: .14em; }
   .pu--gold .pu__type { color: var(--trophy); }
@@ -67,6 +82,7 @@ const aura = {
   .pu__segs span.on { background: var(--trophy); box-shadow: 0 0 8px rgba(245, 197, 66, .6); }
 
   @media (prefers-reduced-motion: reduce) {
-    .pu:hover, .pu:focus-visible { transform: none; }
+    .pu:hover, .pu:focus-visible { translate: none; scale: none; }
+    .pu:hover .pu__aura, .pu:focus-visible .pu__aura { scale: none; }
   }
 </style>

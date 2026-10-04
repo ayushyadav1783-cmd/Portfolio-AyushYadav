@@ -5,10 +5,12 @@ import { initBroadcast } from './broadcast';
 import { initReveals } from './reveals';
 import { initScouting } from './scouting';
 import { initStartingVII } from './starting7';
+import { initPowerUps } from './powerups';
 
 initScroll();
 initReveals();
 initScouting();
 initStartingVII();
+initPowerUps();
 // The bar's clock and bugs start once the walkout is over.
 runIntro().then(initBroadcast);

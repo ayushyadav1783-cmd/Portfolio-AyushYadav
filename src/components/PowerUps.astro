@@ -8,10 +8,10 @@ const pu = copy.powerups;
 <section id="powerups" class="powerups wrap" aria-labelledby="pu-h" data-zone>
   <Bug time={pu.bugTime} label={pu.bug} />
   <div class="section-head">
-    <h2 id="pu-h" class="title-xl d">Power<span class="red">-</span>ups</h2>
+    <h2 id="pu-h" class="title-xl d" data-pu-title>Power<span class="red">-</span>ups</h2>
     <p data-reveal="fade">{pu.intro}</p>
   </div>
-  <div class="powerups__grid">
+  <div class="powerups__grid" data-pu-grid>
     {content.powerups.map((u) => <PowerUpCard powerup={u} />)}
   </div>
   <div class="base">
