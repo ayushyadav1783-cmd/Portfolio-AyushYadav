@@ -1,4 +1,4 @@
-// Starting VII (spec §5.3): broadcast-camera pin, cards running into the 1-1-2-3, hover tilt and
+// Starting VII (spec §5.3): the pitch tilts up as it scrolls in (no pin), hover tilt and
 // glare, flip to the gold teaser, then a shared-element expand into the match report at #report-N.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,7 +14,7 @@ export function initStartingVII() {
   const cards = [...pitch.querySelectorAll<HTMLAnchorElement>('[data-card]')];
 
   const mm = gsap.matchMedia();
-  mm.add(MQ.desktop, () => pinSequence(stage, pitch));
+  mm.add(MQ.desktop, () => tiltIn(stage, pitch));
   mm.add(MQ.mobile, () => mobileRunIn(pitch));
 
   if (finePointer) cards.forEach((card) => hoverTilt(card, pitch));
@@ -22,50 +22,27 @@ export function initStartingVII() {
 }
 
 /**
- * Broadcast camera (agreed with Ayush, tightened on his feedback). The whole formation is on the
- * pitch from the first frame, already fitted to the screen. It tilts up while the section scrolls in
- * (no pin, no empty frames), then pins for a short 40vh: a hold to read the line-up, the 7 catching
- * the floodlights, and the camera zooming to 100% as the pin releases.
+ * Desktop entry (Ayush's feedback, 2026-10-04: no pin, no shrinking, no black frames). The pitch stays
+ * full size with every card on it and simply tilts up from the ground as it scrolls in, finishing
+ * while its top is still in the lower part of the screen, so it is flat about one scroll earlier.
+ * The 7 catches the floodlights once.
  */
-function pinSequence(stage: HTMLElement, pitch: HTMLElement) {
-  let fit = 1;
-  let offY = 0;
-  const measure = () => {
-    const h = pitch.offsetHeight;
-    const top = 84; // clear the broadcast bar
-    fit = Math.min(1, (window.innerHeight - top - 24) / h);
-    offY = top + Math.max(0, (window.innerHeight - top - 24 - h * fit) / 2);
-  };
-  measure();
+function tiltIn(stage: HTMLElement, pitch: HTMLElement) {
   const st = pitch.querySelector<HTMLElement>('[data-slot="ST"]')!;
-  gsap.set(pitch, { transformOrigin: '50% 0%', transformPerspective: 1600 });
-
-  // Approach: tilt up quickly as it scrolls in.
-  gsap.fromTo(pitch, { rotationX: 38 }, {
+  gsap.set(pitch, { transformOrigin: '50% 0%', transformPerspective: 1800 });
+  gsap.fromTo(pitch, { rotationX: 32, scale: 0.94 }, {
     rotationX: 0,
+    scale: 1,
     ease: 'power2.out',
-    scrollTrigger: { trigger: stage, start: 'top 85%', end: 'top 20%', scrub: 0.4 },
+    scrollTrigger: { trigger: stage, start: 'top bottom', end: 'top 55%', scrub: 0.4 },
   });
-
-  // Pinned: hold to view the line-up, then zoom to full size.
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: stage,
-      start: 'top top',
-      end: '+=40%',
-      pin: true,
-      scrub: 0.5,
-      invalidateOnRefresh: true,
-      onRefreshInit: measure,
-    },
+  gsap.fromTo(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))' }, {
+    keyframes: [
+      { filter: 'brightness(1.5) drop-shadow(0 0 36px rgba(245,197,66,.85))', duration: 0.25 },
+      { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))', duration: 0.6 },
+    ],
+    scrollTrigger: { trigger: st, start: 'top 75%', once: true },
   });
-  tl.fromTo(pitch, { scale: () => fit, y: () => offY }, { scale: () => fit, y: () => offY, duration: 0.45 }, 0)
-    .fromTo(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))' },
-      { filter: 'brightness(1.5) drop-shadow(0 0 36px rgba(245,197,66,.85))', duration: 0.12 }, 0.08)
-    .to(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))', duration: 0.2 }, 0.2)
-    .to(pitch, { scale: 1, y: 0, duration: 0.55, ease: 'power2.inOut' }, 0.45);
-
   return () => gsap.set([pitch, st], { clearProps: 'all' });
 }
 
