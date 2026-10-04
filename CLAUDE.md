@@ -24,6 +24,7 @@ Ayush changed these after the spec was written. They're applied in the spec, con
 - GitHub is https://github.com/ayushyadav1783-cmd (2026-10-03).
 - The hero resume CTA reads `Resume` (no "1 page, I promise"), and Resume links open the Scouting Report overlay (spec §8.1) instead of the raw PDF (2026-10-03).
 - The Scouting Report never embeds the PDF (it contains the phone number); it shows a summary card and links to the PDF (2026-10-03).
+- Starting VII pin: 70vh, cards on the pitch from the start (no run-out), fitted pitch tilts up then zooms to 100% (2026-10-04).
 - `resume/resume.tex` is the resume source (copied from MASTER_FINAL.tex). Rebuild `assets/resume.pdf` from it; see resume/README.md.
 
 ## Fixed decisions (do not reopen)

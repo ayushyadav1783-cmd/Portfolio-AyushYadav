@@ -7,8 +7,6 @@ import { startScroll, stopScroll } from './scroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const KICKOFF_ORDER = ['GK', 'CB', 'CM', 'CAM', 'LW', 'RW', 'ST']; // the 7 lands last
-
 export function initStartingVII() {
   const stage = document.querySelector<HTMLElement>('[data-xi-stage]');
   const pitch = document.querySelector<HTMLElement>('[data-pitch]');
@@ -24,29 +22,22 @@ export function initStartingVII() {
 }
 
 /**
- * Broadcast camera (agreed with Ayush): while pinned, the pitch is fitted to the screen so the
- * whole formation is visible; it tilts up, the cards run out of the tunnel, then the camera
- * zooms to full size as the pin releases.
+ * Broadcast camera (agreed with Ayush, shortened on his feedback): the whole formation is on the
+ * pitch from the first frame. While pinned for 70vh, the pitch is fitted to the screen and tilts
+ * up from lying flat to face the camera, the 7 gets a gold flash, then the camera zooms to 100%
+ * as the pin releases so scrolling continues at full size.
  */
 function pinSequence(stage: HTMLElement, pitch: HTMLElement) {
   let fit = 1;
   let offY = 0;
   const measure = () => {
     const h = pitch.offsetHeight;
-    fit = Math.min(1, (window.innerHeight - 40) / h);
-    offY = Math.max(0, (window.innerHeight - h * fit) / 2);
+    const top = 84; // clear the broadcast bar
+    fit = Math.min(1, (window.innerHeight - top - 24) / h);
+    offY = top + Math.max(0, (window.innerHeight - top - 24 - h * fit) / 2);
   };
   measure();
-
-  // Card centre relative to the tunnel mouth (bottom centre of the pitch), in untransformed px.
-  const offsetIn = (el: HTMLElement) => {
-    let x = 0, y = 0, n: HTMLElement | null = el;
-    while (n && n !== pitch) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
-    return { x: x + el.offsetWidth / 2, y: y + el.offsetHeight / 2 };
-  };
-  const slots = KICKOFF_ORDER.map((pos) => pitch.querySelector<HTMLElement>(`[data-slot="${pos}"]`)!);
-  const dx = (li: HTMLElement) => pitch.offsetWidth / 2 - offsetIn(li).x;
-  const dy = (li: HTMLElement) => pitch.offsetHeight - 40 - offsetIn(li).y;
+  const st = pitch.querySelector<HTMLElement>('[data-slot="ST"]')!;
 
   gsap.set(pitch, { transformOrigin: '50% 0%', transformPerspective: 1600 });
   const tl = gsap.timeline({
@@ -54,7 +45,7 @@ function pinSequence(stage: HTMLElement, pitch: HTMLElement) {
     scrollTrigger: {
       trigger: stage,
       start: 'top top',
-      end: '+=150%',
+      end: '+=70%',
       pin: true,
       scrub: 0.6,
       invalidateOnRefresh: true,
@@ -62,27 +53,17 @@ function pinSequence(stage: HTMLElement, pitch: HTMLElement) {
     },
   });
 
-  // 0–40%: the pitch starts flat and far, then tilts up to face the camera.
+  // 0–60%: cards lying on the ground, pitch flat and far, tilting up to face the camera.
   tl.fromTo(pitch, { rotationX: 60, scale: () => fit * 0.7, y: () => offY },
-    { rotationX: 0, scale: () => fit, y: () => offY, duration: 0.4 }, 0);
-
-  // 30–90%: run-out in kickoff order, 0.18 of the timeline each, overlapping.
-  slots.forEach((li, i) => {
-    const at = 0.3 + i * 0.07;
-    tl.fromTo(li, { x: () => dx(li) }, { x: 0, duration: 0.18, ease: 'power2.out' }, at)
-      .fromTo(li, { y: () => dy(li), scale: 0.35, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 0.18 }, at);
-  });
-  // The 7 lands last with a gold flash.
-  const st = slots[slots.length - 1];
-  const flashAt = 0.3 + 6 * 0.07 + 0.18;
+    { rotationX: 0, scale: () => fit, y: () => offY, duration: 0.6, ease: 'power1.inOut' }, 0);
+  // The 7 catches the floodlights as the pitch comes up.
   tl.fromTo(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))' },
-    { filter: 'brightness(1.6) drop-shadow(0 0 40px rgba(245,197,66,.9))', duration: 0.03 }, flashAt)
-    .to(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))', duration: 0.06 }, flashAt + 0.03);
+    { filter: 'brightness(1.5) drop-shadow(0 0 36px rgba(245,197,66,.85))', duration: 0.08 }, 0.52)
+    .to(st, { filter: 'brightness(1) drop-shadow(0 0 0px rgba(245,197,66,0))', duration: 0.12 }, 0.6);
+  // 60–100%: camera zooms to 100% so normal scrolling continues at full size.
+  tl.to(pitch, { scale: 1, y: 0, duration: 0.4, ease: 'power2.inOut' }, 0.6);
 
-  // 90–100%: camera zooms to 100% so normal scrolling continues at full size.
-  tl.to(pitch, { scale: 1, y: 0, duration: 0.1, ease: 'power2.inOut' }, 0.9);
-
-  return () => gsap.set([pitch, ...slots], { clearProps: 'all' });
+  return () => gsap.set([pitch, st], { clearProps: 'all' });
 }
 
 /** Mobile: no pin. Cards slide in from alternating sides as they enter. */
