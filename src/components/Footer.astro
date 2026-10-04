@@ -3,10 +3,11 @@ import { copy } from '../content';
 const f = copy.fulltime;
 ---
 
-<footer class="foot">
+<footer class="foot" data-foot>
   <div class="wrap foot__inner">
-    <div class="foot__score d" aria-label="Final score: Ayush 7, Bugs 0, full time">
-      <span>Ayush</span><span class="foot__digits">7 – 0</span><span class="muted">Bugs</span><span class="foot__ft m">FT</span>
+    <div class="foot__score d">
+      <span class="sr-only" data-score-sr>Final score: Ayush 7, Bugs 0, full time</span>
+      <span aria-hidden="true">Ayush</span><span class="foot__digits" aria-hidden="true"><span class="flap" data-flap data-score-home>7</span> – <span class="flap" data-flap>0</span></span><span class="muted" aria-hidden="true">Bugs</span><span class="foot__ft m" aria-hidden="true">FT</span>
     </div>
     <p class="foot__credits m">{f.footer} <a href="#top">{f.backToTop}</a></p>
   </div>
@@ -17,6 +18,7 @@ const f = copy.fulltime;
   .foot__inner { padding-top: 28px; padding-bottom: 40px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
   .foot__score { display: flex; align-items: center; gap: 14px; font-weight: 900; font-size: 34px; }
   .foot__digits { padding: 2px 12px; border-radius: 6px; background: var(--trophy); color: var(--on-trophy); }
+  .flap { display: inline-block; min-width: .6em; text-align: center; transform-origin: 50% 50%; }
   .foot__ft { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--red-card); }
   .foot__credits { margin: 0; font-size: 12px; letter-spacing: .06em; color: var(--muted); }
   .foot__credits a { color: var(--muted); }

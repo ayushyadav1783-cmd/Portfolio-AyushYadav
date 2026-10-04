@@ -15,11 +15,11 @@ const hrefs: Record<string, string> = {
 <section id="fulltime" class="ft wrap" aria-labelledby="ft-h" data-zone data-fulltime>
   <Bug time={f.bugTime} label={f.bug} variant="red" />
   <h2 id="ft-h" class="ft__title d">
-    {f.titleA}<span class="red">.</span><br /><span class="gold">{f.titleB}</span>
+    <span class="ft__a" data-ft-a>{f.titleA}<span class="red">.</span></span><br /><span class="gold ft__b" data-ft-b>{f.titleB}</span>
   </h2>
 
   <div class="ft__cols">
-    <div class="chat">
+    <div class="chat" data-chat>
       <div class="chat__head">
         <Image src={portrait} alt="" width={80} height={80} format="webp" class="chat__avatar" loading="lazy" />
         <div>
@@ -27,13 +27,18 @@ const hrefs: Record<string, string> = {
           <p class="chat__status m">{f.chatStatus}</p>
         </div>
       </div>
-      <div class="chat__thread" aria-live="polite">
-        {f.opening.map((t) => <p class="bubble bubble--me">{t}</p>)}
+      <div class="chat__thread" aria-live="polite" data-chat-thread>
+        {f.opening.map((t) => <p class="bubble bubble--me" data-chat-msg>{t}</p>)}
       </div>
-      <div class="chat__chips">
-        {f.replies.map((r) => <button type="button" class="chip">{r.chip}</button>)}
+      <div class="chat__chips" data-chat-chips>
+        {f.replies.map((r, i) => (
+          <>
+            <button type="button" class="chip" data-chip={i}>{r.chip}</button>
+            <template data-answer={i}>{r.answer}</template>
+          </>
+        ))}
       </div>
-      <form class="chat__form" action={`mailto:${person.email}`} method="get" enctype="text/plain">
+      <form class="chat__form" action={`mailto:${person.email}`} method="get" enctype="text/plain" data-chat-form data-email={person.email} data-subject={f.mailSubject}>
         <input type="hidden" name="subject" value={f.mailSubject} />
         <label for="dm" class="sr-only">{f.inputLabel}</label>
         <input id="dm" name="body" type="text" placeholder={f.inputPlaceholder} autocomplete="off" />
@@ -45,10 +50,18 @@ const hrefs: Record<string, string> = {
 
     <div class="direct">
       <p class="direct__label m">{f.skip}</p>
-      <a href={`mailto:${person.email}`} class="copy">
-        <span class="copy__label">{person.email}</span>
-        <span class="copy__hint m">{f.copyHint}</span>
+      <a href={`mailto:${person.email}`} class="copy" data-copy={person.email}>
+        <span class="copy__roll copy__label">
+          <span class="copy__line" data-roll-a>{person.email}</span>
+          <span class="copy__line copy__line--b" data-roll-b aria-hidden="true">{f.copiedLabel}</span>
+        </span>
+        <span class="copy__roll copy__hint m">
+          <span class="copy__line" data-roll-a>{f.copyHint}</span>
+          <span class="copy__line copy__line--b" data-roll-b aria-hidden="true">{f.copiedHint}</span>
+        </span>
+        <span class="copy__ripple" aria-hidden="true" data-copy-ripple></span>
       </a>
+      <p class="sr-only" aria-live="polite" data-copy-status></p>
       <ul class="links">
         {f.links.map((l) => (
           <li>
@@ -76,6 +89,15 @@ const hrefs: Record<string, string> = {
   .chat__thread { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
   .bubble { margin: 0; max-width: 82%; padding: 12px 16px; font-size: 15px; line-height: 22px; }
   .bubble--me { align-self: flex-start; border-radius: 18px 18px 18px 4px; background: var(--tunnel); color: var(--floodlight); }
+  .chat__thread :global(.bubble--me) { align-self: flex-start; border-radius: 18px 18px 18px 4px; background: var(--tunnel); color: var(--floodlight); }
+  .chat__thread :global(.bubble--you) { align-self: flex-end; border-radius: 18px 18px 4px 18px; background: var(--trophy); color: var(--on-trophy); }
+  .chat__thread :global(.bubble) { margin: 0; max-width: 82%; padding: 12px 16px; font-size: 15px; line-height: 22px; }
+  .chat__thread { overscroll-behavior: contain; scroll-behavior: smooth; }
+  .chat__thread :global(.typing) {
+    position: absolute; display: inline-flex; gap: 5px; padding: 14px 16px; border-radius: 18px 18px 18px 4px; background: var(--tunnel);
+  }
+  .chat__thread :global(.typing i) { width: 7px; height: 7px; border-radius: var(--r-pill); background: var(--muted); }
+  .chat__thread { position: relative; }
   .chat__chips { padding: 0 20px 16px; display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
     min-height: 40px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--trophy);
@@ -106,7 +128,23 @@ const hrefs: Record<string, string> = {
     transition: transform var(--dur-fast), background-color var(--dur-fast);
   }
   .copy:hover { background: var(--floodlight); color: var(--on-trophy); transform: translateY(-2px); }
+  .copy { position: relative; overflow: hidden; }
   .copy__label { overflow-wrap: anywhere; }
+  /* Label roll (spec §5.6): both states share one line box; the copied state waits below. */
+  .copy__roll { position: relative; display: grid; overflow: hidden; }
+  .copy__line { grid-area: 1 / 1; }
+  .copy__line--b { transform: translateY(110%); }
+  .copy__hint .copy__line { text-align: right; }
+  .copy__ripple {
+    position: absolute; left: var(--rx, 50%); top: var(--ry, 50%); width: 10px; height: 10px; margin: -5px 0 0 -5px;
+    border-radius: var(--r-pill); border: 2px solid rgba(18, 13, 2, .45); opacity: 0; pointer-events: none;
+  }
+  /* Social rows: description slides in from the right on hover (always visible on touch). */
+  @media (hover: hover) and (pointer: fine) {
+    .link__desc { opacity: 0; translate: 14px 0; transition: opacity .3s var(--ease-out), translate .3s var(--ease-out); }
+    .link:hover .link__desc, .link:focus-visible .link__desc { opacity: 1; translate: 0 0; }
+  }
+  .ft__a, .ft__b { display: inline-block; }
   @container (min-width: 340px) { .copy__label { white-space: nowrap; } }
   .copy__hint { flex: none; font-size: 11px; letter-spacing: .14em; font-weight: 700; }
   .links { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
