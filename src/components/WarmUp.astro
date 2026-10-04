@@ -6,22 +6,26 @@ import Bug from './Bug.astro';
 const w = copy.warmup;
 ---
 
-<section id="warmup" class="warmup wrap" aria-labelledby="warmup-h">
-  <p class="warmup__bg d" aria-hidden="true">{w.bgWord}</p>
+<section id="warmup" class="warmup wrap" aria-labelledby="warmup-h" data-zone>
+  <p class="warmup__bg d" aria-hidden="true" data-bgword>{w.bgWord}</p>
   <Bug time={w.bugTime} label={w.bug} />
   <div class="warmup__cols">
     <div class="warmup__text">
-      <h2 id="warmup-h" class="warmup__h d">
+      <h2 id="warmup-h" class="warmup__h d" data-reveal="lines">
         {w.headlineA} <span class="gold">{w.headlineGold}</span> {w.headlineB}
       </h2>
-      <p class="warmup__p">{w.p1}</p>
-      <p class="warmup__p muted">{w.p2}</p>
-      <div class="drills">
+      <p class="warmup__p" data-reveal="fade">{w.p1}</p>
+      <p class="warmup__p muted" data-reveal="fade">{w.p2}</p>
+      <div class="drills" data-drills>
         <p class="drills__title m">{w.drillsTitle}</p>
         <ul>
           {w.drills.map((d) => (
             <li class:list={{ done: d.done }}>
-              <span class="drills__box d" aria-hidden="true">{d.done ? '✓' : ''}</span>
+              <span class="drills__box" aria-hidden="true">
+                {d.done && (
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"></path></svg>
+                )}
+              </span>
               <span><span class="sr-only">{d.done ? 'Done: ' : 'To do: '}</span>{d.t}</span>
             </li>
           ))}
@@ -30,7 +34,17 @@ const w = copy.warmup;
     </div>
 
     <aside class="profile" aria-label="Player profile">
-      <div class="portrait">
+      <div class="portrait" data-portrait>
+        <Picture
+          src={portrait}
+          alt=""
+          widths={[420, 640, 840]}
+          sizes="(min-width: 800px) 420px, 100vw"
+          formats={['avif', 'webp']}
+          fallbackFormat="jpg"
+          class="portrait__img portrait__img--colour"
+          loading="lazy"
+        />
         <Picture
           src={portrait}
           alt={w.portraitAlt}
@@ -43,10 +57,10 @@ const w = copy.warmup;
         />
         <div class="portrait__dots" aria-hidden="true"></div>
         <div class="portrait__fade" aria-hidden="true"></div>
-        <p class="portrait__seven d" aria-hidden="true">7</p>
+        <p class="portrait__seven d" aria-hidden="true" data-seven-badge>7</p>
         <p class="portrait__hint m">{w.portraitHint}</p>
       </div>
-      <dl class="profile__list">
+      <dl class="profile__list" data-typewriter>
         {w.profile.map(([k, v]) => (
           <>
             <dt class="m">{k}</dt>
@@ -79,20 +93,34 @@ const w = copy.warmup;
   .drills__box {
     flex: none; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px;
     border: 2px solid var(--control); background: transparent; color: var(--on-trophy);
-    display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
   }
   .drills li.done .drills__box { border-color: var(--trophy); background: var(--trophy); }
+  .drills path { stroke-dasharray: 1; stroke-dashoffset: 0; }
 
   .profile { flex: 1 1 340px; max-width: 420px; }
   .portrait { position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 5; background: var(--stand); }
   .portrait :global(.portrait__img) {
+    position: absolute; inset: 0;
     width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; display: block;
     filter: grayscale(1) contrast(1.15);
   }
+  .portrait :global(.portrait__img--colour) { filter: none; }
   .portrait__dots {
     position: absolute; inset: 0; mix-blend-mode: multiply;
     background-image: radial-gradient(circle, rgba(255, 74, 61, .55) 1.1px, transparent 1.7px); background-size: 6px 6px;
   }
+  /* Hover reveal (spec §5.2): halftone + grayscale clear from the pointer outward. */
+  @property --reveal { syntax: '<length>'; inherits: true; initial-value: 0px; }
+  .portrait { --mx: 50%; --my: 40%; transition: --reveal .5s var(--ease-out); }
+  .portrait.is-revealed { --reveal: 720px; }
+  .portrait :global(.portrait__img:not(.portrait__img--colour)), .portrait__dots {
+    -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), transparent var(--reveal), #000 calc(var(--reveal) + 1px));
+    mask-image: radial-gradient(circle at var(--mx) var(--my), transparent var(--reveal), #000 calc(var(--reveal) + 1px));
+  }
+  .profile__list dd { position: relative; }
+  .profile__list :global(.tw-ghost) { color: transparent; }
+  .profile__list :global(.tw-live) { position: absolute; inset: 0; }
   .portrait__fade { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; background: linear-gradient(0deg, rgba(8, 8, 11, .92), rgba(8, 8, 11, 0)); }
   .portrait__seven { position: absolute; right: 18px; top: 6px; margin: 0; font-weight: 900; font-size: 120px; line-height: 1; color: var(--trophy); }
   .portrait__hint { position: absolute; left: 20px; bottom: 18px; margin: 0; font-size: 11px; letter-spacing: .14em; color: var(--floodlight); }

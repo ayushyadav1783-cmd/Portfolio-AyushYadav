@@ -5,11 +5,11 @@ import PowerUpCard from './PowerUpCard.astro';
 const pu = copy.powerups;
 ---
 
-<section id="powerups" class="powerups wrap" aria-labelledby="pu-h">
+<section id="powerups" class="powerups wrap" aria-labelledby="pu-h" data-zone>
   <Bug time={pu.bugTime} label={pu.bug} />
   <div class="section-head">
     <h2 id="pu-h" class="title-xl d">Power<span class="red">-</span>ups</h2>
-    <p>{pu.intro}</p>
+    <p data-reveal="fade">{pu.intro}</p>
   </div>
   <div class="powerups__grid">
     {content.powerups.map((u) => <PowerUpCard powerup={u} />)}

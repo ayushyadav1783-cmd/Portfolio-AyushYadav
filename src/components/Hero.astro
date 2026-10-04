@@ -18,7 +18,7 @@ const stars = Array.from({ length: 130 }, () => ({
 }));
 ---
 
-<section id="top" class="hero" aria-labelledby="hero-name">
+<section id="top" class="hero" aria-labelledby="hero-name" data-hero>
   <div class="hero__sky" aria-hidden="true">
     {stars.map((s) => (
       <span
@@ -27,27 +27,27 @@ const stars = Array.from({ length: 130 }, () => ({
       ></span>
     ))}
   </div>
-  <div class="hero__planet" aria-hidden="true"></div>
-  <div class="hero__ring" aria-hidden="true"></div>
-  <div class="hero__beam hero__beam--l" aria-hidden="true"></div>
-  <div class="hero__beam hero__beam--r" aria-hidden="true"></div>
+  <div class="hero__planet" aria-hidden="true" data-planet></div>
+  <div class="hero__ring" aria-hidden="true" data-planet-ring></div>
+  <div class="hero__beam hero__beam--l" aria-hidden="true" data-beam></div>
+  <div class="hero__beam hero__beam--r" aria-hidden="true" data-beam></div>
   {['l', 'r'].map((side) => (
     <div class:list={['tower', `tower--${side}`]} aria-hidden="true">
       <div class="tower__lamps">{Array.from({ length: 8 }, () => <span></span>)}</div>
       <div class="tower__mast"></div>
     </div>
   ))}
-  <div class="hero__stands" aria-hidden="true"></div>
+  <div class="hero__stands" aria-hidden="true" data-stands></div>
   <div class="hero__tunnel" aria-hidden="true"></div>
 
   <div class="hero__words wrap">
-    <p class="hero__eyebrow m">{h.eyebrow}</p>
-    <h1 id="hero-name" class="hero__name d">
+    <p class="hero__eyebrow m" data-walk-fade>{h.eyebrow}</p>
+    <h1 id="hero-name" class="hero__name d" data-walk-name>
       {h.first}<br /><span class="outline-text">{h.last}</span><span class="red">.</span>
     </h1>
-    <p class="hero__tagline">{h.taglineA} <span class="gold">{h.taglineB}</span></p>
-    <p class="hero__sub m">{h.sub}</p>
-    <div class="hero__ctas">
+    <p class="hero__tagline" data-walk-fade>{h.taglineA} <span class="gold">{h.taglineB}</span></p>
+    <p class="hero__sub m" data-walk-fade>{h.sub}</p>
+    <div class="hero__ctas" data-walk-fade>
       <a href="#warmup" class="btn btn--gold">
         {h.ctaPrimary}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"></path><path d="m6 13 6 6 6-6"></path></svg>
@@ -55,11 +55,11 @@ const stars = Array.from({ length: 130 }, () => ({
       <a href="/resume.pdf" class="btn btn--ghost">{h.ctaSecondary}</a>
     </div>
   </div>
-  <p class="hero__cue m" aria-hidden="true">{h.scrollCue}</p>
+  <p class="hero__cue m" aria-hidden="true" data-walk-fade>{h.scrollCue}</p>
 </section>
 
 <div class="ticker" aria-hidden="true">
-  <div class="marquee d">
+  <div class="marquee marquee--run d" data-velocity>
     <span>{h.ticker}</span><span>{h.ticker}</span>
   </div>
 </div>
@@ -139,5 +139,7 @@ const stars = Array.from({ length: 130 }, () => ({
     position: relative; z-index: 3; overflow: hidden; margin: -10px -20px 0;
     background: var(--trophy); color: var(--on-trophy); transform: rotate(-1.2deg);
   }
+  .hero__name { transform-origin: 0% 100%; }
+
   .ticker .marquee { gap: 28px; padding: 10px 0; font-weight: 800; font-size: 26px; letter-spacing: .02em; }
 </style>

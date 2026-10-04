@@ -5,12 +5,12 @@ import PlayerCard from './PlayerCard.astro';
 const x = copy.xi;
 ---
 
-<section id="xi" class="xi" aria-labelledby="xi-h">
+<section id="xi" class="xi" aria-labelledby="xi-h" data-zone>
   <div class="wrap">
     <Bug time={x.bugTime} label={x.bug} />
     <div class="section-head">
       <h2 id="xi-h" class="title-xl d">Starting <span class="gold">VII</span></h2>
-      <p style="max-width: 420px">{x.intro}</p>
+      <p style="max-width: 420px" data-reveal="fade">{x.intro}</p>
     </div>
   </div>
 

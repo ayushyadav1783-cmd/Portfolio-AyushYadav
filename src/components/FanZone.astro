@@ -16,12 +16,12 @@ const looks = [
 ];
 ---
 
-<section id="fanzone" class="fan" aria-labelledby="fan-h">
+<section id="fanzone" class="fan" aria-labelledby="fan-h" data-zone data-halftime>
   <div class="fan__dots" aria-hidden="true"></div>
   <div class="wrap fan__head">
     <Bug time={f.bugTime} label={f.bug} variant="dark" />
     <h2 id="fan-h" class="title-xl d fan__title">{f.title}</h2>
-    <p class="fan__line">{f.line}</p>
+    <p class="fan__line" data-reveal="fade">{f.line}</p>
   </div>
 
   <div class="fan__tickers" aria-hidden="true">

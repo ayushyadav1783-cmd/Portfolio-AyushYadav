@@ -1,15 +1,27 @@
 ---
 import { copy } from '../content';
 const { bar, nav } = copy;
+
+// Zone time for each nav target, shown in the Stadium map menu.
+const zoneTime: Record<string, string> = {
+  '#warmup': copy.warmup.bugTime,
+  '#xi': copy.xi.bugTime,
+  '#powerups': copy.powerups.bugTime,
+  '#fanzone': copy.fanzone.bugTime,
+  '#fulltime': copy.fulltime.bugTime,
+};
 ---
 
-<header class="bar">
+<header class="bar" data-bar>
   <div class="bar__left">
-    <button type="button" class="bar__seven d" aria-label="Ayush Yadav, number 7. Home.">7</button>
-    <div class="bar__score m">
+    <button type="button" class="bar__seven d" aria-label="Ayush Yadav, number 7. Home." data-seven>7</button>
+    <button type="button" class="bar__match m" aria-haspopup="dialog" aria-controls="stadium-map" data-map-open>
+      <span class="sr-only">Open stadium map. </span>
       <span class="bar__live"><span class="bar__dot"></span>{bar.live}</span>
-      <span>{bar.scoreHome} <span class="gold">7</span> – {bar.scoreAway}</span>
-    </div>
+      <span class="bar__scoreline">{bar.scoreHome} <span class="gold">7</span> – {bar.scoreAway}</span>
+      <span class="bar__clock" data-clock aria-hidden="true">0'</span>
+      <svg class="bar__chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+    </button>
   </div>
   <nav aria-label="Stadium map" class="bar__nav m">
     {nav.map((n) => <a href={n.href}>{n.label}</a>)}
@@ -20,27 +32,104 @@ const { bar, nav } = copy;
   </a>
 </header>
 
+<!-- Lower-third "bug" that slides in on entering each zone, then collapses into the clock. -->
+<div class="lt m" data-lt aria-hidden="true">
+  <span class="lt__time" data-lt-time></span><span class="lt__label" data-lt-label></span>
+</div>
+
+<!-- Full-screen stadium map (mobile nav; also opened from the match clock on desktop). -->
+<dialog id="stadium-map" class="map" aria-labelledby="map-h" data-map>
+  <div class="map__inner">
+    <div class="map__head">
+      <p id="map-h" class="map__title m">STADIUM MAP</p>
+      <button type="button" class="map__close" aria-label="Close stadium map" data-map-close>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
+      </button>
+    </div>
+    <nav aria-label="Stadium map">
+      <ol class="map__list">
+        <li><a href="#top" class="map__link"><span class="map__time m">0'</span><span class="d">Kickoff</span></a></li>
+        {nav.map((n) => (
+          <li>
+            <a href={n.href} class="map__link"><span class="map__time m">{zoneTime[n.href]}</span><span class="d">{n.label}</span></a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </div>
+</dialog>
+
 <style>
   .bar {
     position: sticky; top: 0; z-index: 20;
-    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
     padding: 14px clamp(16px, 3cqi, 40px);
     background: rgba(8, 8, 11, .72); backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(246, 243, 236, .08);
+    will-change: transform;
   }
-  .bar__left { display: flex; align-items: center; gap: 14px; }
+  .bar__left { display: flex; align-items: center; gap: 10px; min-width: 0; }
   .bar__seven {
-    width: 44px; height: 44px; padding: 0; border-radius: var(--r-pill);
+    flex: none; width: 44px; height: 44px; padding: 0; border-radius: var(--r-pill);
     border: 2px solid var(--trophy); background: transparent; color: var(--trophy);
     cursor: pointer; font-weight: 900; font-size: 26px; line-height: 1;
   }
-  .bar__score { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: .12em; }
+  .bar__match {
+    display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 4px;
+    border: 0; background: transparent; color: var(--floodlight); cursor: pointer;
+    font-size: 12px; letter-spacing: .12em; white-space: nowrap;
+  }
   .bar__live {
     display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: var(--r-chip);
     background: var(--red-card); color: var(--on-red); font-weight: 700;
   }
   .bar__dot { width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--on-red); }
-  .bar__nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12px; letter-spacing: .12em; }
+  .bar__clock { display: inline-block; min-width: 4ch; font-weight: 700; color: var(--trophy); font-variant-numeric: tabular-nums; }
+  .bar__chev { color: var(--muted); }
+  .bar__nav { display: none; gap: 4px 18px; font-size: 12px; letter-spacing: .12em; }
   .bar__nav a { color: var(--muted); text-decoration: none; padding: 12px 0; }
-  .bar__nav a:hover { color: var(--floodlight); }
+  .bar__nav a:hover, .bar__nav a[aria-current='true'] { color: var(--floodlight); }
+  .bar__hurry { flex: none; }
+
+  /* Desktop: inline nav, no chevron. Mobile: 7 + LIVE + clock left, highlights pill right (spec §4.2). */
+  @container (min-width: 1100px) {
+    .bar__nav { display: flex; flex-wrap: wrap; }
+    .bar__chev { display: none; }
+  }
+  @container (max-width: 640px) {
+    .bar__scoreline { display: none; }
+    .bar__match { gap: 6px; }
+    .bar__hurry { padding: 0 14px; }
+    .bar__hurry svg { display: none; }
+  }
+
+  .lt {
+    position: fixed; left: clamp(16px, 3vw, 40px); bottom: clamp(16px, 4vh, 40px); z-index: 30;
+    display: flex; align-items: stretch; font-size: 13px; letter-spacing: .14em;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .5); pointer-events: none; visibility: hidden;
+  }
+  .lt__time { padding: 10px 12px; background: var(--trophy); color: var(--on-trophy); font-weight: 700; }
+  .lt__label { padding: 10px 14px; background: var(--stand); color: var(--floodlight); border: 1px solid rgba(246, 243, 236, .12); border-left: 0; }
+
+  .map {
+    width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0;
+    background: var(--night); color: var(--floodlight);
+  }
+  .map::backdrop { background: rgba(8, 8, 11, .9); }
+  .map__inner { max-width: 1280px; margin: 0 auto; padding: 18px clamp(16px, 3vw, 40px) 40px; }
+  .map__head { display: flex; justify-content: space-between; align-items: center; }
+  .map__title { margin: 0; font-size: 12px; letter-spacing: .14em; color: var(--muted); }
+  .map__close {
+    width: 48px; height: 48px; border-radius: var(--r-pill); border: 1px solid var(--control);
+    background: transparent; color: var(--floodlight); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .map__close:hover { border-color: var(--trophy); color: var(--trophy); }
+  .map__list { list-style: none; margin: 32px 0 0; padding: 0; display: flex; flex-direction: column; }
+  .map__link {
+    display: flex; align-items: baseline; gap: 16px; padding: 14px 0; text-decoration: none; color: var(--floodlight);
+    border-bottom: 1px solid rgba(246, 243, 236, .08); font-weight: 900; font-size: clamp(40px, 11vw, 88px); line-height: .9;
+  }
+  .map__link:hover { color: var(--trophy); }
+  .map__time { flex: none; width: 4.5ch; font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--trophy); }
 </style>

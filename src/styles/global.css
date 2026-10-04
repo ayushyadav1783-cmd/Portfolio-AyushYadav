@@ -13,6 +13,7 @@ img, svg { display: block; }
 a { color: var(--trophy); }
 a:hover { color: var(--floodlight); }
 :focus-visible { outline: 2px solid var(--trophy); outline-offset: 3px; }
+[tabindex='-1']:focus { outline: none; }
 button { font-family: inherit; }
 
 .d { font-family: var(--font-display); text-transform: uppercase; }
@@ -55,9 +56,22 @@ button { font-family: inherit; }
 }
 .btn--red:hover { color: var(--on-red); transform: translateY(-2px) rotate(-1deg); }
 
-/* Marquee (static in phase 1; motion lands in phase 2) */
+/* Marquee: CSS loop; JS scales playbackRate and skew with scroll velocity. Off for reduced motion. */
 .marquee { display: flex; width: max-content; white-space: nowrap; }
+.marquee--run { animation: mq 28s linear infinite; }
+@keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Floodlight sweep between sections (spec §4.5 MVP). */
+.sweep {
+  position: fixed; inset: 0; z-index: 15; pointer-events: none; overflow: hidden; visibility: hidden;
+}
+.sweep__band {
+  position: absolute; top: -50%; left: 0; width: 38vmax; height: 200%;
+  background: linear-gradient(90deg, rgba(246, 243, 236, 0), rgba(246, 243, 236, .15) 50%, rgba(246, 243, 236, 0));
+  transform: translateX(-120%) rotate(18deg);
+}
 
 @media (prefers-reduced-motion: reduce) {
+  .marquee--run { animation: none; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }

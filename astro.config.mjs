@@ -5,4 +5,5 @@ import react from '@astrojs/react';
 export default defineConfig({
   site: 'https://ayush-portfolio.vercel.app',
   integrations: [react()],
+  devToolbar: { enabled: false },
 });
