@@ -9,6 +9,7 @@ import { initPowerUps } from './powerups';
 import { initFullTime } from './fulltime';
 import { initShootout } from './shootout';
 import { initFanZone } from './fanzone';
+import { initHighlights } from './highlights';
 
 initScroll();
 initReveals();
@@ -18,5 +19,6 @@ initPowerUps();
 initFullTime();
 initShootout();
 initFanZone();
+initHighlights();
 // The bar's clock and bugs start once the walkout is over.
 runIntro().then(initBroadcast);
