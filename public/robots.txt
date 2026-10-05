@@ -1,0 +1,5 @@
+# Match Day, Ayush Yadav's portfolio
+User-agent: *
+Allow: /
+
+Sitemap: https://ayushyadav1783-cmd.github.io/Portfolio-AyushYadav/sitemap.xml

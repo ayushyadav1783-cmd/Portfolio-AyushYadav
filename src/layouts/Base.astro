@@ -1,6 +1,6 @@
 ---
 import '../styles/fonts.css';
-import { withBase } from '../content';
+import { content, withBase } from '../content';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import displayFont from '@fontsource/big-shoulders-display/files/big-shoulders-display-latin-900-normal.woff2?url';
@@ -14,6 +14,30 @@ const {
   title = 'Ayush Yadav — Computer Vision & Robotics Engineer',
   description = 'Ayush Yadav, MS in AI at NJIT and AI Research Assistant at the Aegean AI Lab. Computer vision, 3D Gaussian Splatting and robotics. Open to new-grad roles from May 2027.',
 } = Astro.props;
+
+const person = content.person;
+const origin = Astro.site ?? new URL('http://localhost:4321');
+const pageUrl = new URL(Astro.url.pathname, origin).href;
+const ogImage = new URL(withBase('/og.png'), origin).href;
+const ogAlt = 'Ayush Yadav, computer vision and robotics researcher. "I teach robots to see the world in 3D." Planet, floodlights and the stadium tunnel.';
+
+// Structured data for search engines. Public details only; never a phone number.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: person.fullName,
+  alternateName: person.name,
+  url: pageUrl,
+  image: ogImage,
+  jobTitle: person.headline,
+  description,
+  email: `mailto:${person.email}`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Harrison', addressRegion: 'NJ', addressCountry: 'US' },
+  worksFor: { '@type': 'Organization', name: 'Aegean AI Lab, NJIT' },
+  alumniOf: person.education.map((e) => ({ '@type': 'CollegeOrUniversity', name: e.school })),
+  knowsAbout: ['Computer vision', '3D Gaussian Splatting', 'Robotics', 'Camera geometry', 'Point-cloud registration', 'Object detection and tracking', 'Self-supervised video learning'],
+  sameAs: [person.github, person.linkedin],
+};
 ---
 
 <!doctype html>
@@ -25,12 +49,47 @@ const {
     <meta name="theme-color" content="#08080b" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined} />
+    <meta name="author" content={person.fullName} />
+    <meta name="keywords" content="Ayush Yadav, computer vision, 3D Gaussian Splatting, robotics, machine learning, NJIT, new grad, portfolio" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="canonical" href={pageUrl} />
+
+    <!-- Icons, manifest, humans -->
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('/icon-192.png')} type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
+    <link rel="author" href={withBase('/humans.txt')} type="text/plain" />
+    <link rel="sitemap" type="application/xml" href={withBase('/sitemap.xml')} />
+    <meta name="application-name" content="Ayush Yadav" />
+    <meta name="apple-mobile-web-app-title" content="Ayush Yadav" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ayush Yadav · Match Day" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content={pageUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogAlt} />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogAlt} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script is:inline>
       // Intro plays once per session (spec §4.1). Decided before first paint so nothing flashes.
       document.documentElement.classList.add('js');

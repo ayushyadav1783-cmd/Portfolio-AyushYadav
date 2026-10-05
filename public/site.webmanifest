@@ -1,0 +1,20 @@
+{
+  "name": "Ayush Yadav · Match Day",
+  "short_name": "Ayush Yadav",
+  "description": "Ayush Yadav, MS in AI at NJIT. Computer vision, 3D Gaussian Splatting and robotics, presented as one match day.",
+  "lang": "en",
+  "start_url": "/Portfolio-AyushYadav/",
+  "scope": "/Portfolio-AyushYadav/",
+  "id": "/Portfolio-AyushYadav/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#08080b",
+  "theme_color": "#08080b",
+  "categories": ["portfolio", "education", "technology"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

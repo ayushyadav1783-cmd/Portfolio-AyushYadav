@@ -1,0 +1,23 @@
+/* TEAM */
+Name: Ayush Ramashankar Yadav
+Role: Design, research, code, copy
+Site: https://ayushyadav1783-cmd.github.io/Portfolio-AyushYadav/
+GitHub: https://github.com/ayushyadav1783-cmd
+LinkedIn: https://www.linkedin.com/in/ayush-yadav-87ab581a5
+Contact: ayushyadav1783@gmail.com
+From: Harrison, NJ, USA
+
+/* THANKS */
+Claude Code, for pairing on the build
+The Aegean AI Lab at NJIT, for the research behind the projects
+Everyone who has ever shouted "SIUUU" at a screen
+
+/* SITE */
+Concept: one match day at my stadium; scrolling is the walkout
+Last update: 2026/10/04
+Language: English
+Standards: HTML5, CSS3, ES2022, WebGL2
+Components: Astro, TypeScript, React (islands), GSAP, Lenis, OGL, matter-js
+Hosting: GitHub Pages
+Fonts: Big Shoulders Display, Instrument Sans, JetBrains Mono
+Easter eggs: yes. The 7 knows.
